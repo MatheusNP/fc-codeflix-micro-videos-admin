@@ -10,7 +10,7 @@ type Expected =
   | (() => any);
 
 expect.extend({
-  containsErrorsMessages(expected: Expected, received: FieldsErrors) {
+  containsErrorsMessages(expected: Expected, received: FieldsErrors = null) {
     if (typeof expected === 'function') {
       try {
         expected();
