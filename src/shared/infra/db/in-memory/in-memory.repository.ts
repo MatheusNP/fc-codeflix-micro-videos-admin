@@ -128,7 +128,7 @@ export abstract class InMemorySearchableRepository<
     per_page: SearchParams['per_page']
   ) {
     const start = (page - 1) * per_page;
-    const end = page + per_page;
+    const end = start + per_page;
     return items.slice(start, end);
   }
 }
