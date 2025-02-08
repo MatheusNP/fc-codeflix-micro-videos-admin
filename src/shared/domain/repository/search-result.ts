@@ -1,20 +1,20 @@
 import { Entity } from '../entity';
 
-type SearchResultProps<A extends Entity> = {
-  items: A[];
+type SearchResultProps<E extends Entity> = {
+  items: E[];
   total: number;
   current_page: number;
   per_page: number;
 };
 
-export class SearchResult<A extends Entity = Entity> {
-  readonly items: A[];
+export class SearchResult<E extends Entity = Entity> {
+  readonly items: E[];
   readonly total: number;
   readonly current_page: number;
   readonly per_page: number;
   readonly last_page: number;
 
-  constructor(props: SearchResultProps<A>) {
+  constructor(props: SearchResultProps<E>) {
     this.items = props.items;
     this.total = props.total;
     this.current_page = props.current_page;
