@@ -1,7 +1,7 @@
-import { Uuid } from '../../../../shared/domain/value-objects/uuid.vo';
-import { setupSequelize } from '../../../../shared/infra/testing/helpers';
-import { CategorySequelizeRepository } from '../../../infra/db/sequelize/category-sequelize.repository';
-import { CategoryModel } from '../../../infra/db/sequelize/category.model';
+import { Uuid } from '../../../../../shared/domain/value-objects/uuid.vo';
+import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
+import { CategorySequelizeRepository } from '../../../../infra/db/sequelize/category-sequelize.repository';
+import { CategoryModel } from '../../../../infra/db/sequelize/category.model';
 import { CreateCategoryUseCase } from '../../create-category.use-case';
 
 describe('CreateCategoryUseCase Integration Tests', () => {
@@ -17,9 +17,9 @@ describe('CreateCategoryUseCase Integration Tests', () => {
 
   it('should create a new category', async () => {
     let output = await useCase.execute({ name: 'test' });
-    let entity = await repository.findById(new Uuid(output.category_id));
+    let entity = await repository.findById(new Uuid(output.id));
     expect(output).toStrictEqual({
-      category_id: entity.category_id.id,
+      id: entity.category_id.id,
       name: entity.name,
       description: entity.description,
       is_active: entity.is_active,
@@ -31,9 +31,9 @@ describe('CreateCategoryUseCase Integration Tests', () => {
       description: 'some description',
       is_active: true,
     });
-    entity = await repository.findById(new Uuid(output.category_id));
+    entity = await repository.findById(new Uuid(output.id));
     expect(output).toStrictEqual({
-      category_id: entity.category_id.id,
+      id: entity.category_id.id,
       name: entity.name,
       description: entity.description,
       is_active: entity.is_active,
@@ -45,9 +45,9 @@ describe('CreateCategoryUseCase Integration Tests', () => {
       description: 'some description',
       is_active: false,
     });
-    entity = await repository.findById(new Uuid(output.category_id));
+    entity = await repository.findById(new Uuid(output.id));
     expect(output).toStrictEqual({
-      category_id: entity.category_id.id,
+      id: entity.category_id.id,
       name: entity.name,
       description: entity.description,
       is_active: entity.is_active,
