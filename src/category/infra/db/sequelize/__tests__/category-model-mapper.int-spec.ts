@@ -11,8 +11,10 @@ describe('CategorySequelizeRepository Integration Tests', () => {
   });
 
   it('should throws error when category is invalid', () => {
+    expect.assertions(2);
     const model = CategoryModel.build({
       category_id: '123e4567-e89b-12d3-a456-426655440000',
+      name: 't'.repeat(256),
     });
     try {
       CategoryModelMapper.toEntity(model);
@@ -21,13 +23,11 @@ describe('CategorySequelizeRepository Integration Tests', () => {
       );
     } catch (e) {
       expect(e).toBeInstanceOf(EntityValidationError);
-      expect((e as EntityValidationError).errors).toMatchObject({
-        name: [
-          'name should not be empty',
-          'name must be a string',
-          'name must be shorter than or equal to 255 characters',
-        ],
-      });
+      expect((e as EntityValidationError).errors).toMatchObject([
+        {
+          name: ['name must be shorter than or equal to 255 characters'],
+        },
+      ]);
     }
   });
 

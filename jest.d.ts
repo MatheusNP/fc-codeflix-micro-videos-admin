@@ -1,9 +1,8 @@
 declare global {
   namespace jest {
     interface Matchers<R> {
-      containsErrorsMessages: (
-        expected: Expected,
-        received: FieldsErrors = null
+      notificationContainsErrorMessages: (
+        expected: Array<string | { [key: string]: string[] }>
       ) => R;
     }
   }
