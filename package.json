@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:cov": "jest --coverage",
     "tsc:check": "tsc --noEmit"
   },
   "keywords": [],
