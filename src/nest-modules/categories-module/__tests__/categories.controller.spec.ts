@@ -1,19 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CategoriesController } from './categories.controller';
-import { DatabaseModule } from '../database-module/database.module';
-import { CategoriesModule } from './categories.module';
-import { ConfigModule } from '../config-module/config.module';
+import { CategoriesController } from '../categories.controller';
+import { DatabaseModule } from '../../database-module/database.module';
+import { CategoriesModule } from '../categories.module';
+import { ConfigModule } from '../../config-module/config.module';
 import { getModelToken } from '@nestjs/sequelize';
 import { CategoryModel } from '@core/category/infra/db/sequelize/category.model';
 import { CategoryInMemoryRepository } from '@core/category/infra/db/in-memory/category-in-memory.repository';
 import { CreateCategoryOutput } from '@core/category/application/use-cases/create-category/create-category.use-case';
-import { CreateCategoryDto } from './dto/create-category.dto';
+import { CreateCategoryDto } from '../dto/create-category.dto';
 import {
   CategoryCollectionPresenter,
   CategoryPresenter,
-} from './categories.presenter';
+} from '../categories.presenter';
 import { UpdateCategoryOutput } from '@core/category/application/use-cases/update-category/update-category.use-case';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { UpdateCategoryDto } from '../dto/update-category.dto';
 import { GetCategoryOutput } from '@core/category/application/use-cases/get-gategory/get-category.use-case';
 import { ListCategoriesOutput } from '@core/category/application/use-cases/list-categories/list-categories.use-case';
 import { sourceMapsEnabled } from 'process';
