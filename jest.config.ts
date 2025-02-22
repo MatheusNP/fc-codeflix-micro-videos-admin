@@ -204,22 +204,27 @@ const config: Config = {
   // Whether to use watchman for file crawling
   // watchman: true,
 
-  moduleFileExtensions: [
-    "js",
-    "json",
-    "ts"
-  ],
-  rootDir: "src",
-  testRegex: ".*\\..*spec\\.ts$",
+  moduleFileExtensions: ['js', 'json', 'ts'],
+  rootDir: 'src',
+  testRegex: '.*\\..*spec\\.ts$',
   transform: {
-    "^.+\\.(t|j)s$": '@swc/jest'
+    '^.+\\.(t|j)s$': '@swc/jest',
   },
-  collectCoverageFrom: [
-    "**/*.(t|j)s"
-  ],
-  coverageDirectory: "../coverage",
-  testEnvironment: "node",
+  collectCoverageFrom: ['**/*.(t|j)s'],
+  coverageDirectory: '../coverage',
+  testEnvironment: 'node',
   setupFilesAfterEnv: ['./core/shared/infra/testing/expect-helpers.ts'],
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '.interface.ts',
+    '-interface.ts',
+    'shared/testing',
+    'shared-module/testing',
+    'validator-rules.ts',
+    '-fixture.ts',
+    '.input.ts',
+    '.d.ts',
+  ],
   coverageProvider: 'v8',
   coverageThreshold: {
     global: {
