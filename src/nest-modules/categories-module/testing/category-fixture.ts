@@ -225,33 +225,6 @@ export class UpdateCategoryFixture {
     };
 
     return {
-      NAME_UNDEFINED: {
-        send_data: {
-          name: undefined,
-        },
-        expected: {
-          message: ['name should not be empty', 'name must be a string'],
-          ...defaultExpected,
-        },
-      },
-      NAME_NULL: {
-        send_data: {
-          name: null,
-        },
-        expected: {
-          message: ['name should not be empty', 'name must be a string'],
-          ...defaultExpected,
-        },
-      },
-      NAME_EMPTY: {
-        send_data: {
-          name: '',
-        },
-        expected: {
-          message: ['name should not be empty'],
-          ...defaultExpected,
-        },
-      },
       NAME_NOT_A_STRING: {
         send_data: {
           name: 5,
