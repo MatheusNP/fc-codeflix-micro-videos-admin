@@ -1,11 +1,9 @@
 import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
 import { CastMember } from '../cast-member.entity';
-import { CastMemberType } from '../cast-member.type';
+import { CastMemberType, CastMemberTypeValues } from '../cast-member.type';
 
 describe('CastMember entity unit tests', () => {
-  const castMemberTypeValues = Object.values(CastMemberType)
-    .filter((value) => typeof value === 'number')
-    .join(', ');
+  const castMemberTypeValues = CastMemberTypeValues.join(', ');
 
   beforeAll(() => {
     CastMember.prototype.validate = jest

@@ -3,6 +3,10 @@ export enum CastMemberType {
   ACTOR = 2,
 }
 
+export const CastMemberTypeValues = Object.values(CastMemberType).filter(
+  (value) => typeof value === 'number',
+);
+
 // export class InvalidCastMemberTypeError extends Error {
 //   constructor(invalidType: any) {
 //     super(`Invalid cast member type: ${invalidType}`);
