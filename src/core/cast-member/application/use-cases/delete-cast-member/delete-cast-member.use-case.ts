@@ -3,20 +3,17 @@ import { IUseCase } from '@core/shared/application/use-case.interface';
 import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
 
 export class DeleteCastMemberUseCase
-  implements
-    IUseCase<DeleteCastMemberUseCaseInput, DeleteCastMemberUseCaseOutput>
+  implements IUseCase<DeleteCastMemberInput, DeleteCastMemberOutput>
 {
   constructor(private castMemberRepository: ICastMemberRepository) {}
 
-  async execute(
-    input: DeleteCastMemberUseCaseInput,
-  ): Promise<DeleteCastMemberUseCaseOutput> {
+  async execute(input: DeleteCastMemberInput): Promise<DeleteCastMemberOutput> {
     await this.castMemberRepository.delete(new Uuid(input.id));
   }
 }
 
-export type DeleteCastMemberUseCaseInput = {
+export type DeleteCastMemberInput = {
   id: string;
 };
 
-export type DeleteCastMemberUseCaseOutput = void;
+export type DeleteCastMemberOutput = void;
