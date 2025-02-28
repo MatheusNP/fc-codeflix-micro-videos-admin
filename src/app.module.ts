@@ -10,8 +10,8 @@ import { CastMembersModule } from './nest-modules/cast-members-module/cast-membe
     ConfigModule.forRoot(),
     DatabaseModule,
     CategoriesModule,
-    SharedModule,
     CastMembersModule,
+    SharedModule,
   ],
 })
 export class AppModule {}
