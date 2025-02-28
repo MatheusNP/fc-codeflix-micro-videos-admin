@@ -173,8 +173,7 @@ describe('CastMemberFakeBuilder unit tests', () => {
 
     expect(castMember.cast_member_id).toBeInstanceOf(Uuid);
     expect(typeof castMember.name === 'string').toBeTruthy();
-    console.log(typeof castMember.type);
-    // expect(castMember.type).toBeInstanceOf(CastMemberType);
+    expect(typeof castMember.type === 'number').toBeTruthy();
     expect(castMember.created_at).toBeInstanceOf(Date);
 
     const created_at = new Date();
@@ -199,7 +198,7 @@ describe('CastMemberFakeBuilder unit tests', () => {
     castMembers.forEach((castMember) => {
       expect(castMember.cast_member_id).toBeInstanceOf(Uuid);
       expect(typeof castMember.name === 'string').toBeTruthy();
-      // expect(castMember.type).toBeInstanceOf(CastMemberType);
+      expect(typeof castMember.type === 'number').toBeTruthy();
       expect(castMember.created_at).toBeInstanceOf(Date);
     });
 
