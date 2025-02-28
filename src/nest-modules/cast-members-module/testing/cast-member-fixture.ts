@@ -1,7 +1,12 @@
 import { CastMember } from '@core/cast-member/domain/cast-member.entity';
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
+import {
+  CastMemberType,
+  CastMemberTypeValues,
+} from '@core/cast-member/domain/cast-member.type';
 
 const _keysInResponse = ['id', 'name', 'type', 'created_at'];
+
+const castMemberTypeValues = CastMemberTypeValues.join(', ');
 
 export class GetCastMemberFixture {
   static keysInResponse = _keysInResponse;
@@ -44,7 +49,7 @@ export class CreateCastMemberFixture {
             'name should not be empty',
             'name must be a string',
             'type should not be empty',
-            'type must be a enum',
+            `type must be one of the following values: ${castMemberTypeValues}`,
           ],
           ...defaultExpected,
         },
@@ -52,6 +57,7 @@ export class CreateCastMemberFixture {
       NAME_UNDEFINED: {
         send_data: {
           name: undefined,
+          type: CastMemberType.ACTOR,
         },
         expected: {
           message: ['name should not be empty', 'name must be a string'],
@@ -61,6 +67,7 @@ export class CreateCastMemberFixture {
       NAME_NULL: {
         send_data: {
           name: null,
+          type: CastMemberType.ACTOR,
         },
         expected: {
           message: ['name should not be empty', 'name must be a string'],
@@ -70,6 +77,7 @@ export class CreateCastMemberFixture {
       NAME_EMPTY: {
         send_data: {
           name: '',
+          type: CastMemberType.ACTOR,
         },
         expected: {
           message: ['name should not be empty'],
@@ -79,9 +87,10 @@ export class CreateCastMemberFixture {
       NAME_NOT_A_STRING: {
         send_data: {
           name: 5,
+          type: CastMemberType.ACTOR,
         },
         expected: {
-          message: ['name should not be empty', 'name must be a string'],
+          message: ['name must be a string'],
           ...defaultExpected,
         },
       },
@@ -91,7 +100,10 @@ export class CreateCastMemberFixture {
           type: undefined,
         },
         expected: {
-          message: ['type should not be empty', 'type must be a enum'],
+          message: [
+            'type should not be empty',
+            `type must be one of the following values: ${castMemberTypeValues}`,
+          ],
           ...defaultExpected,
         },
       },
@@ -101,7 +113,10 @@ export class CreateCastMemberFixture {
           type: null,
         },
         expected: {
-          message: ['type should not be empty', 'type must be a enum'],
+          message: [
+            'type should not be empty',
+            `type must be one of the following values: ${castMemberTypeValues}`,
+          ],
           ...defaultExpected,
         },
       },
@@ -111,7 +126,9 @@ export class CreateCastMemberFixture {
           type: 0,
         },
         expected: {
-          message: ['type should not be empty'],
+          message: [
+            `type must be one of the following values: ${castMemberTypeValues}`,
+          ],
           ...defaultExpected,
         },
       },
@@ -121,7 +138,9 @@ export class CreateCastMemberFixture {
           type: '5',
         },
         expected: {
-          message: ['type must be a enum'],
+          message: [
+            `type must be one of the following values: ${castMemberTypeValues}`,
+          ],
           ...defaultExpected,
         },
       },
@@ -133,7 +152,7 @@ export class CreateCastMemberFixture {
           message: [
             'name must be a string',
             'type should not be empty',
-            'type must be a enum',
+            `type must be one of the following values: ${castMemberTypeValues}`,
           ],
           ...defaultExpected,
         },
@@ -146,7 +165,7 @@ export class CreateCastMemberFixture {
           message: [
             'name should not be empty',
             'name must be a string',
-            'type must be a enum',
+            `type must be one of the following values: ${castMemberTypeValues}`,
           ],
           ...defaultExpected,
         },
@@ -165,6 +184,7 @@ export class CreateCastMemberFixture {
       NAME_TOO_LONG: {
         send_data: {
           name: faker.withInvalidNameTooLong().name,
+          type: faker.type,
         },
         expected: {
           message: ['name must be shorter than or equal to 255 characters'],
@@ -198,6 +218,7 @@ export class UpdateCastMemberFixture {
         },
         expected: {
           name: faker.name,
+          type: expect.anything(),
         },
       },
       {
@@ -205,6 +226,7 @@ export class UpdateCastMemberFixture {
           type: faker.type,
         },
         expected: {
+          name: expect.anything(),
           type: faker.type,
         },
       },
@@ -227,21 +249,27 @@ export class UpdateCastMemberFixture {
           ...defaultExpected,
         },
       },
-      DESCRIPTION_NOT_A_STRING: {
+      TYPE_NOT_A_ENUM: {
         send_data: {
-          description: 5,
+          type: '5',
         },
         expected: {
-          message: ['description must be a string'],
+          message: [
+            `type must be one of the following values: ${castMemberTypeValues}`,
+          ],
           ...defaultExpected,
         },
       },
-      IS_ACTIVE_NOT_A_BOOLEAN: {
+      NAME_AND_TYPE_INVALIDS: {
         send_data: {
-          is_active: 'a',
+          name: 5,
+          type: '5',
         },
         expected: {
-          message: ['is_active must be a boolean value'],
+          message: [
+            'name must be a string',
+            `type must be one of the following values: ${castMemberTypeValues}`,
+          ],
           ...defaultExpected,
         },
       },

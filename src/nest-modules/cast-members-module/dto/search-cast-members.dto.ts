@@ -4,9 +4,9 @@ import { SortDirection } from '@core/shared/domain/repository/search-params';
 import { IsEnum, ValidateNested } from 'class-validator';
 
 export class CastMemberTypeFilter {
-  name?: string;
+  name?: string | null;
   @IsEnum(CastMemberType)
-  type?: CastMemberType;
+  type?: CastMemberType | null;
 }
 
 export class SearchCastMembersDto implements ListCastMembersInput {

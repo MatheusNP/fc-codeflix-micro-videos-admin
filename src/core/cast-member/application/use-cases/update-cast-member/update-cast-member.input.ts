@@ -1,6 +1,6 @@
 import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
 import {
-  IsInt,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -22,7 +22,7 @@ export class UpdateCastMemberInput {
   @IsOptional()
   name?: string;
 
-  @IsInt()
+  @IsEnum(CastMemberType)
   @IsOptional()
   type?: CastMemberType;
 
