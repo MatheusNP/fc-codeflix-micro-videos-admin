@@ -4,8 +4,10 @@ import {
   CastMemberOutputMapper,
 } from '../common/cast-member-output';
 import { ICastMemberRepository } from '@core/cast-member/domain/cast-member.repository';
-import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+import {
+  CastMember,
+  CastMemberId,
+} from '@core/cast-member/domain/cast-member.aggregate';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
 
 export class GetCastMemberUseCase
@@ -15,7 +17,7 @@ export class GetCastMemberUseCase
 
   async execute(input: GetCastMemberInput): Promise<GetCastMemberOutput> {
     const castMember = await this.castMemberRepository.findById(
-      new Uuid(input.id),
+      new CastMemberId(input.id),
     );
     if (!castMember) {
       throw new NotFoundError(input.id, CastMember);

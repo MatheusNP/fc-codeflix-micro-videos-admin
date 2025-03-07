@@ -3,8 +3,10 @@ import { CastMemberModel } from '../cast-member.model';
 import { CastMemberModelMapper } from '../cast-member-model-mapper';
 import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
 import { EntityValidationError } from '@core/shared/domain/validators/validation-error';
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
-import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
+import {
+  CastMember,
+  CastMemberId,
+} from '@core/cast-member/domain/cast-member.aggregate';
 
 describe('CastMemberSequelizeRepository Integration Tests', () => {
   setupSequelize({
@@ -45,7 +47,9 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
     const entity = CastMemberModelMapper.toEntity(model);
     expect(entity.toJSON()).toStrictEqual(
       new CastMember({
-        cast_member_id: new Uuid('123e4567-e89b-12d3-a456-426655440000'),
+        cast_member_id: new CastMemberId(
+          '123e4567-e89b-12d3-a456-426655440000',
+        ),
         name: 'Actor',
         type: CastMemberType.ACTOR,
         created_at,
@@ -56,7 +60,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
   it('should convert a cast member entity to a cast member model', () => {
     const created_at = new Date();
     const entity = new CastMember({
-      cast_member_id: new Uuid('123e4567-e89b-12d3-a456-426655440000'),
+      cast_member_id: new CastMemberId('123e4567-e89b-12d3-a456-426655440000'),
       name: 'Actor',
       type: CastMemberType.ACTOR,
       created_at,

@@ -1,5 +1,4 @@
-import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
-import { CastMember } from '../cast-member.entity';
+import { CastMember, CastMemberId } from '../cast-member.aggregate';
 import { CastMemberType, CastMemberTypeValues } from '../cast-member.type';
 
 describe('CastMember entity unit tests', () => {
@@ -18,7 +17,7 @@ describe('CastMember entity unit tests', () => {
         type: CastMemberType.ACTOR,
       });
 
-      expect(castMember.cast_member_id).toBeInstanceOf(Uuid);
+      expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
       expect(castMember.name).toBe('Actor');
       expect(castMember.type).toBe(CastMemberType.ACTOR);
       expect(castMember.created_at).toBeInstanceOf(Date);
@@ -32,7 +31,7 @@ describe('CastMember entity unit tests', () => {
         created_at,
       });
 
-      expect(castMember.cast_member_id).toBeInstanceOf(Uuid);
+      expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
       expect(castMember.name).toBe('Actor');
       expect(castMember.type).toBe(CastMemberType.ACTOR);
       expect(castMember.created_at).toBe(created_at);
@@ -46,7 +45,7 @@ describe('CastMember entity unit tests', () => {
         type: CastMemberType.ACTOR,
       });
 
-      expect(castMember.cast_member_id).toBeInstanceOf(Uuid);
+      expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
       expect(castMember.name).toBe('Actor');
       expect(castMember.type).toBe(CastMemberType.ACTOR);
       expect(castMember.created_at).toBeInstanceOf(Date);
@@ -57,7 +56,7 @@ describe('CastMember entity unit tests', () => {
     const arrange = [
       { cast_member_id: null },
       { cast_member_id: undefined },
-      { cast_member_id: new Uuid() },
+      { cast_member_id: new CastMemberId() },
     ];
 
     test.each(arrange)('id = %j', ({ cast_member_id }) => {
@@ -66,8 +65,8 @@ describe('CastMember entity unit tests', () => {
         type: CastMemberType.ACTOR,
         cast_member_id: cast_member_id as any,
       });
-      expect(castMember.cast_member_id).toBeInstanceOf(Uuid);
-      if (cast_member_id instanceof Uuid) {
+      expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
+      if (cast_member_id instanceof CastMemberId) {
         expect(castMember.cast_member_id).toBe(cast_member_id);
       }
     });

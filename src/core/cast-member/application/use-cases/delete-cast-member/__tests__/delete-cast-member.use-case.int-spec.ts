@@ -2,7 +2,7 @@ import { CastMemberSequelizeRepository } from '@core/cast-member/infra/db/sequel
 import { DeleteCastMemberUseCase } from '../delete-cast-member.use-case';
 import { CastMemberModel } from '@core/cast-member/infra/db/sequelize/cast-member.model';
 import { InvalidUuidError } from '@core/shared/domain/value-objects/uuid.vo';
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
 import { setupSequelize } from '@core/shared/infra/testing/helpers';
 
 describe('DeleteCastMemberUseCase Integration Tests', () => {

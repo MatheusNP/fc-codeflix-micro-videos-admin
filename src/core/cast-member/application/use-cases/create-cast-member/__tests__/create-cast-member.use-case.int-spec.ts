@@ -2,8 +2,8 @@ import { CastMemberSequelizeRepository } from '@core/cast-member/infra/db/sequel
 import { CreateCastMemberUseCase } from '../create-cast-member.use-case';
 import { CastMemberModel } from '@core/cast-member/infra/db/sequelize/cast-member.model';
 import { setupSequelize } from '@core/shared/infra/testing/helpers';
-import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
 import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
+import { CastMemberId } from '@core/cast-member/domain/cast-member.aggregate';
 
 describe('CreateCastMemberUseCase Integration Tests', () => {
   let repository: CastMemberSequelizeRepository;
@@ -21,7 +21,7 @@ describe('CreateCastMemberUseCase Integration Tests', () => {
       name: 'test',
       type: CastMemberType.ACTOR,
     });
-    let entity = await repository.findById(new Uuid(output.id));
+    let entity = await repository.findById(new CastMemberId(output.id));
     expect(output).toStrictEqual({
       id: entity.cast_member_id.id,
       name: entity.name,
@@ -33,7 +33,7 @@ describe('CreateCastMemberUseCase Integration Tests', () => {
       name: 'another',
       type: CastMemberType.DIRECTOR,
     });
-    entity = await repository.findById(new Uuid(output.id));
+    entity = await repository.findById(new CastMemberId(output.id));
     expect(output).toStrictEqual({
       id: entity.cast_member_id.id,
       name: entity.name,

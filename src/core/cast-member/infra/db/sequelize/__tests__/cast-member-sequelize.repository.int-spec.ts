@@ -1,8 +1,10 @@
 import { setupSequelize } from '@core/shared/infra/testing/helpers';
 import { CastMemberModel } from '../cast-member.model';
 import { CastMemberSequelizeRepository } from '../cast-member-sequelize.repository';
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
-import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
+import {
+  CastMember,
+  CastMemberId,
+} from '@core/cast-member/domain/cast-member.aggregate';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
 import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
 import { CastMemberModelMapper } from '../cast-member-model-mapper';
@@ -31,7 +33,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
   });
 
   it('should find an entity by id', async () => {
-    let entityFound = await repository.findById(new Uuid());
+    let entityFound = await repository.findById(new CastMemberId());
     expect(entityFound).toBeNull();
 
     const castMember = CastMember.fake().aCastMember().build();
@@ -68,7 +70,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
   });
 
   it('should throw error on delete when entity not found', async () => {
-    const cast_member_id = new Uuid();
+    const cast_member_id = new CastMemberId();
     await expect(repository.delete(cast_member_id)).rejects.toThrow(
       new NotFoundError(cast_member_id.id, CastMember),
     );

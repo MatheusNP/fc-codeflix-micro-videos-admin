@@ -10,13 +10,15 @@ import {
   ListCastMembersFixture,
   UpdateCastMemberFixture,
 } from '../testing/cast-member-fixture';
-import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
 import { CastMemberOutputMapper } from '@core/cast-member/application/use-cases/common/cast-member-output';
 import {
   CastMemberCollectionPresenter,
   CastMemberPresenter,
 } from '../cast-members.presenter';
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+import {
+  CastMember,
+  CastMemberId,
+} from '@core/cast-member/domain/cast-member.aggregate';
 
 describe('CastMembersController Integration Tests', () => {
   let controller: CastMembersController;
@@ -59,7 +61,9 @@ describe('CastMembersController Integration Tests', () => {
       'when body is $send_data',
       async ({ send_data, expected }) => {
         const presenter = await controller.create(send_data);
-        const entity = await repository.findById(new Uuid(presenter.id));
+        const entity = await repository.findById(
+          new CastMemberId(presenter.id),
+        );
         expect(entity.toJSON()).toStrictEqual({
           cast_member_id: presenter.id,
           created_at: presenter.created_at,
@@ -87,7 +91,9 @@ describe('CastMembersController Integration Tests', () => {
           castMember.cast_member_id.id,
           send_data,
         );
-        const entity = await repository.findById(new Uuid(presenter.id));
+        const entity = await repository.findById(
+          new CastMemberId(presenter.id),
+        );
         expect(entity.toJSON()).toStrictEqual({
           cast_member_id: presenter.id,
           created_at: presenter.created_at,

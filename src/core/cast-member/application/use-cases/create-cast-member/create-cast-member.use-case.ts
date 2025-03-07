@@ -1,4 +1,4 @@
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
 import { ICastMemberRepository } from '@core/cast-member/domain/cast-member.repository';
 import { IUseCase } from '@core/shared/application/use-case.interface';
 import { EntityValidationError } from '@core/shared/domain/validators/validation-error';

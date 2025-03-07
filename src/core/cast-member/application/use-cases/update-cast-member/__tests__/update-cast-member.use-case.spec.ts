@@ -1,10 +1,11 @@
 import { CastMemberInMemoryRepository } from '@core/cast-member/infra/db/in-memory/cast-member-in-memory.repository';
 import { UpdateCastMemberUseCase } from '../update-cast-member.use-case';
-import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+import {
+  CastMember,
+  CastMemberId,
+} from '@core/cast-member/domain/cast-member.aggregate';
 import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
-import { CastMemberOutputMapper } from '../../common/cast-member-output';
 
 describe('UpdateCastMemberUseCase Unit Tests', () => {
   let repository: CastMemberInMemoryRepository;
@@ -16,14 +17,14 @@ describe('UpdateCastMemberUseCase Unit Tests', () => {
   });
 
   it('should throw error when entity not found', async () => {
-    const uuid = new Uuid();
+    const castMemberId = new CastMemberId();
     await expect(() =>
       useCase.execute({
-        id: uuid.id,
+        id: castMemberId.id,
         name: 'fake name',
         type: CastMemberType.ACTOR,
       }),
-    ).rejects.toThrow(new NotFoundError(uuid.id, CastMember));
+    ).rejects.toThrow(new NotFoundError(castMemberId.id, CastMember));
   });
 
   it('should update a cast member', async () => {

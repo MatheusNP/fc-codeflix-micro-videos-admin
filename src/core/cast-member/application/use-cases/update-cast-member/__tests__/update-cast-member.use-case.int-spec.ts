@@ -2,14 +2,13 @@ import { CastMemberSequelizeRepository } from '@core/cast-member/infra/db/sequel
 import { UpdateCastMemberUseCase } from '../update-cast-member.use-case';
 import { setupSequelize } from '@core/shared/infra/testing/helpers';
 import { CastMemberModel } from '@core/cast-member/infra/db/sequelize/cast-member.model';
-import {
-  InvalidUuidError,
-  Uuid,
-} from '@core/shared/domain/value-objects/uuid.vo';
+import { InvalidUuidError } from '@core/shared/domain/value-objects/uuid.vo';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+import {
+  CastMember,
+  CastMemberId,
+} from '@core/cast-member/domain/cast-member.aggregate';
 import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
-import { CastMemberModelMapper } from '@core/cast-member/infra/db/sequelize/cast-member-model-mapper';
 import { CastMemberOutputMapper } from '../../common/cast-member-output';
 
 describe('DeleteCastMemberUseCase Integration Tests', () => {
@@ -28,10 +27,10 @@ describe('DeleteCastMemberUseCase Integration Tests', () => {
       new InvalidUuidError(),
     );
 
-    const uuid = new Uuid();
-    await expect(() => useCase.execute({ id: uuid.id })).rejects.toThrow(
-      new NotFoundError(uuid.id, CastMember),
-    );
+    const castMemberId = new CastMemberId();
+    await expect(() =>
+      useCase.execute({ id: castMemberId.id }),
+    ).rejects.toThrow(new NotFoundError(castMemberId.id, CastMember));
   });
 
   it('should update a cast member', async () => {
@@ -82,7 +81,7 @@ describe('DeleteCastMemberUseCase Integration Tests', () => {
       const output = await useCase.execute(input);
       expect(output).toStrictEqual(expected);
 
-      const castMember = await repository.findById(new Uuid(input.id));
+      const castMember = await repository.findById(new CastMemberId(input.id));
       expect(CastMemberOutputMapper.toOutput(castMember)).toStrictEqual(
         expected,
       );

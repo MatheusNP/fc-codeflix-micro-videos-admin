@@ -2,7 +2,7 @@ import { CastMemberSequelizeRepository } from '@core/cast-member/infra/db/sequel
 import { ListCastMembersUseCase } from '../list-cast-members.use-case';
 import { setupSequelize } from '@core/shared/infra/testing/helpers';
 import { CastMemberModel } from '@core/cast-member/infra/db/sequelize/cast-member.model';
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
 import { CastMemberOutputMapper } from '../../common/cast-member-output';
 import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
 

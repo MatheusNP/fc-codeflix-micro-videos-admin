@@ -1,4 +1,4 @@
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
 import { CastMemberInMemoryRepository } from './cast-member-in-memory.repository';
 import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
 

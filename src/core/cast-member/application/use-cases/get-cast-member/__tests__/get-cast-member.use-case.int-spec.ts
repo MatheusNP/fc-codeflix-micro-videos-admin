@@ -2,11 +2,11 @@ import { CastMemberSequelizeRepository } from '@core/cast-member/infra/db/sequel
 import { GetCastMemberUseCase } from '../get-cast-member.use-case';
 import { setupSequelize } from '@core/shared/infra/testing/helpers';
 import { CastMemberModel } from '@core/cast-member/infra/db/sequelize/cast-member.model';
+import { InvalidUuidError } from '@core/shared/domain/value-objects/uuid.vo';
 import {
-  InvalidUuidError,
-  Uuid,
-} from '@core/shared/domain/value-objects/uuid.vo';
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+  CastMember,
+  CastMemberId,
+} from '@core/cast-member/domain/cast-member.aggregate';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
 
 describe('DeleteCastMemberUseCase Integration Tests', () => {
@@ -25,10 +25,10 @@ describe('DeleteCastMemberUseCase Integration Tests', () => {
       new InvalidUuidError(),
     );
 
-    const uuid = new Uuid();
-    await expect(() => useCase.execute({ id: uuid.id })).rejects.toThrow(
-      new NotFoundError(uuid.id, CastMember),
-    );
+    const castMemberId = new CastMemberId();
+    await expect(() =>
+      useCase.execute({ id: castMemberId.id }),
+    ).rejects.toThrow(new NotFoundError(castMemberId.id, CastMember));
   });
 
   it('should get a cast member', async () => {

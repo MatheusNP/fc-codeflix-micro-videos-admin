@@ -4,9 +4,11 @@ import {
   CastMemberOutputMapper,
 } from '../common/cast-member-output';
 import { UpdateCastMemberInput } from './update-cast-member.input';
-import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
 import { ICastMemberRepository } from '@core/cast-member/domain/cast-member.repository';
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+import {
+  CastMember,
+  CastMemberId,
+} from '@core/cast-member/domain/cast-member.aggregate';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
 import { EntityValidationError } from '@core/shared/domain/validators/validation-error';
 
@@ -16,11 +18,11 @@ export class UpdateCastMemberUseCase
   constructor(private castMemberRepository: ICastMemberRepository) {}
 
   async execute(input: UpdateCastMemberInput): Promise<CastMemberOutput> {
-    const uuid = new Uuid(input.id);
-    const castMember = await this.castMemberRepository.findById(uuid);
+    const castMemberId = new CastMemberId(input.id);
+    const castMember = await this.castMemberRepository.findById(castMemberId);
 
     if (!castMember) {
-      throw new NotFoundError(uuid.id, CastMember);
+      throw new NotFoundError(castMemberId.id, CastMember);
     }
 
     input.name && castMember.changeName(input.name);

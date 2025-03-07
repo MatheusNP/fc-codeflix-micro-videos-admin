@@ -1,4 +1,4 @@
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
 import {
   CastMemberType,
   CastMemberTypeValues,

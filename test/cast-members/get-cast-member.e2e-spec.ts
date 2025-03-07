@@ -1,5 +1,5 @@
 import { CastMemberOutputMapper } from '@core/cast-member/application/use-cases/common/cast-member-output';
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
 import { ICastMemberRepository } from '@core/cast-member/domain/cast-member.repository';
 import { instanceToPlain } from 'class-transformer';
 import { CastMembersController } from 'src/nest-modules/cast-members-module/cast-members.controller';

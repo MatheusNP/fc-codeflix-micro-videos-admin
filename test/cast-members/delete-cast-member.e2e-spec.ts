@@ -1,4 +1,4 @@
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
 import { ICastMemberRepository } from '@core/cast-member/domain/cast-member.repository';
 import { CAST_MEMBERS_PROVIDERS } from 'src/nest-modules/cast-members-module/cast-members.providers';
 import { startApp } from 'src/nest-modules/shared-module/testing/helpers';

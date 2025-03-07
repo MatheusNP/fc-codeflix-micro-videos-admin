@@ -1,10 +1,10 @@
 import { CastMemberInMemoryRepository } from '@core/cast-member/infra/db/in-memory/cast-member-in-memory.repository';
 import { GetCastMemberUseCase } from '../get-cast-member.use-case';
+import { InvalidUuidError } from '@core/shared/domain/value-objects/uuid.vo';
 import {
-  InvalidUuidError,
-  Uuid,
-} from '@core/shared/domain/value-objects/uuid.vo';
-import { CastMember } from '@core/cast-member/domain/cast-member.entity';
+  CastMember,
+  CastMemberId,
+} from '@core/cast-member/domain/cast-member.aggregate';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
 
 describe('DeleteCastMemberUseCase Unit Tests', () => {
@@ -21,10 +21,10 @@ describe('DeleteCastMemberUseCase Unit Tests', () => {
       new InvalidUuidError(),
     );
 
-    const uuid = new Uuid();
-    await expect(() => useCase.execute({ id: uuid.id })).rejects.toThrow(
-      new NotFoundError(uuid.id, CastMember),
-    );
+    const castMemberId = new CastMemberId();
+    await expect(() =>
+      useCase.execute({ id: castMemberId.id }),
+    ).rejects.toThrow(new NotFoundError(castMemberId.id, CastMember));
   });
 
   it('should get a cast member', async () => {
