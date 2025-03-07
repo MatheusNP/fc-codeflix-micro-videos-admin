@@ -1,8 +1,7 @@
 import { CategoryModel } from '../category.model';
 import { CategoryModelMapper } from '../category-model-mapper';
 import { EntityValidationError } from '../../../../../shared/domain/validators/validation-error';
-import { Category } from '../../../../domain/category.entity';
-import { Uuid } from '../../../../../shared/domain/value-objects/uuid.vo';
+import { Category, CategoryId } from '../../../../domain/category.aggregate';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
 
 describe('CategorySequelizeRepository Integration Tests', () => {
@@ -19,7 +18,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     try {
       CategoryModelMapper.toEntity(model);
       fail(
-        'The category is invalid, but it needs to throw a EntityValidationError'
+        'The category is invalid, but it needs to throw a EntityValidationError',
       );
     } catch (e) {
       expect(e).toBeInstanceOf(EntityValidationError);
@@ -44,19 +43,19 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     const entity = CategoryModelMapper.toEntity(model);
     expect(entity.toJSON()).toStrictEqual(
       new Category({
-        category_id: new Uuid('123e4567-e89b-12d3-a456-426655440000'),
+        category_id: new CategoryId('123e4567-e89b-12d3-a456-426655440000'),
         name: 'Movie',
         description: 'Category description',
         is_active: true,
         created_at,
-      }).toJSON()
+      }).toJSON(),
     );
   });
 
   it('should convert a category entity to a category model', () => {
     const created_at = new Date();
     const entity = new Category({
-      category_id: new Uuid('123e4567-e89b-12d3-a456-426655440000'),
+      category_id: new CategoryId('123e4567-e89b-12d3-a456-426655440000'),
       name: 'Movie',
       description: 'Category description',
       is_active: true,

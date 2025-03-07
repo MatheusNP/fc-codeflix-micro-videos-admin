@@ -1,6 +1,6 @@
 import { Chance } from 'chance';
-import { Uuid } from '../../../shared/domain/value-objects/uuid.vo';
 import { CategoryFakeBuilder } from '../category-fake.builder';
+import { CategoryId } from '../category.aggregate';
 
 describe('CategoryFakeBuilder unit tests', () => {
   const faker = CategoryFakeBuilder.aCategory();
@@ -9,7 +9,7 @@ describe('CategoryFakeBuilder unit tests', () => {
     test('should throw error when any with methods has called', () => {
       expect(() => {
         new Error(
-          `Property category_id not have a factory, use 'with' methods`
+          `Property category_id not have a factory, use 'with' methods`,
         );
       });
     });
@@ -18,13 +18,13 @@ describe('CategoryFakeBuilder unit tests', () => {
       expect(faker['_category_id']).toBeUndefined();
     });
 
-    test('withUuid', () => {
-      const category_id = new Uuid();
-      const $this = faker.withUuid(category_id);
+    test('withCategoryId', () => {
+      const category_id = new CategoryId();
+      const $this = faker.withCategoryId(category_id);
       expect($this).toBeInstanceOf(CategoryFakeBuilder);
       expect(faker['_category_id']).toBe(category_id);
 
-      faker.withUuid(() => category_id);
+      faker.withCategoryId(() => category_id);
       //@ts-expect-error _category_id is a callable
       expect(faker['_category_id']()).toBe(category_id);
 
@@ -32,15 +32,15 @@ describe('CategoryFakeBuilder unit tests', () => {
     });
 
     test('should pass index to category_id factory', () => {
-      let mockFactory = jest.fn(() => new Uuid());
-      faker.withUuid(mockFactory);
+      let mockFactory = jest.fn(() => new CategoryId());
+      faker.withCategoryId(mockFactory);
       faker.build();
       expect(mockFactory).toHaveBeenCalledTimes(1);
 
-      const category_id = new Uuid();
+      const category_id = new CategoryId();
       mockFactory = jest.fn(() => category_id);
       const fakerMany = CategoryFakeBuilder.theCategories(2);
-      fakerMany.withUuid(mockFactory);
+      fakerMany.withCategoryId(mockFactory);
       fakerMany.build();
       expect(mockFactory).toHaveBeenCalledTimes(2);
       expect(fakerMany.build()[0].category_id).toBe(category_id);
@@ -169,7 +169,7 @@ describe('CategoryFakeBuilder unit tests', () => {
     test('should throw error when any with methods has called', () => {
       const fakerCategory = CategoryFakeBuilder.aCategory();
       expect(() => fakerCategory.created_at).toThrowError(
-        new Error(`Property created_at not have a factory, use 'with' methods`)
+        new Error(`Property created_at not have a factory, use 'with' methods`),
       );
     });
 
@@ -208,16 +208,16 @@ describe('CategoryFakeBuilder unit tests', () => {
     const faker = CategoryFakeBuilder.aCategory();
     let category = faker.build();
 
-    expect(category.category_id).toBeInstanceOf(Uuid);
+    expect(category.category_id).toBeInstanceOf(CategoryId);
     expect(typeof category.name === 'string').toBeTruthy();
     expect(typeof category.description === 'string').toBeTruthy();
     expect(typeof category.is_active === 'boolean').toBeTruthy();
     expect(category.created_at).toBeInstanceOf(Date);
 
     const created_at = new Date();
-    const category_id = new Uuid();
+    const category_id = new CategoryId();
     category = faker
-      .withUuid(category_id)
+      .withCategoryId(category_id)
       .withName('test name')
       .withDescription('test description')
       .deactivate()
@@ -236,7 +236,7 @@ describe('CategoryFakeBuilder unit tests', () => {
     let categories = faker.build();
 
     categories.forEach((category) => {
-      expect(category.category_id).toBeInstanceOf(Uuid);
+      expect(category.category_id).toBeInstanceOf(CategoryId);
       expect(typeof category.name === 'string').toBeTruthy();
       expect(typeof category.description === 'string').toBeTruthy();
       expect(typeof category.is_active === 'boolean').toBeTruthy();
@@ -244,9 +244,9 @@ describe('CategoryFakeBuilder unit tests', () => {
     });
 
     const created_at = new Date();
-    const category_id = new Uuid();
+    const category_id = new CategoryId();
     categories = faker
-      .withUuid(category_id)
+      .withCategoryId(category_id)
       .withName('test name')
       .withDescription('test description')
       .deactivate()

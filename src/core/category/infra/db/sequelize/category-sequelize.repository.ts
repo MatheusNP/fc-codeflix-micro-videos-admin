@@ -1,7 +1,6 @@
 import { literal, Op } from 'sequelize';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
-import { Uuid } from '../../../../shared/domain/value-objects/uuid.vo';
-import { Category } from '../../../domain/category.entity';
+import { Category, CategoryId } from '../../../domain/category.aggregate';
 import {
   CategorySearchParams,
   CategorySearchResult,
@@ -46,7 +45,7 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     });
   }
 
-  async delete(category_id: Uuid): Promise<void> {
+  async delete(category_id: CategoryId): Promise<void> {
     const id = category_id.id;
     const model = await this._get(id);
     if (!model) {
@@ -56,7 +55,7 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     await this.categoryModel.destroy({ where: { category_id: id } });
   }
 
-  async findById(category_id: Uuid): Promise<Category | null> {
+  async findById(category_id: CategoryId): Promise<Category | null> {
     const model = await this._get(category_id.id);
     return model ? CategoryModelMapper.toEntity(model) : null;
   }
