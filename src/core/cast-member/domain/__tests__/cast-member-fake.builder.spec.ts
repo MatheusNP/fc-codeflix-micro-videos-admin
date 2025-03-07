@@ -1,10 +1,10 @@
 import { Chance } from 'chance';
 import { CastMemberFakeBuilder } from '../cast-member-fake.builder';
-import { CastMemberType } from '../cast-member.type';
 import { CastMemberId } from '../cast-member.aggregate';
+import { CastMemberType, CastMemberTypes } from '../cast-member-type.vo';
 
 describe('CastMemberFakeBuilder unit tests', () => {
-  const faker = CastMemberFakeBuilder.aCastMember();
+  const faker = CastMemberFakeBuilder.anActor();
 
   describe('cast_member_id prop', () => {
     test('should throw error when any with methods has called', () => {
@@ -50,7 +50,7 @@ describe('CastMemberFakeBuilder unit tests', () => {
   });
 
   describe('name prop', () => {
-    const faker = CastMemberFakeBuilder.aCastMember();
+    const faker = CastMemberFakeBuilder.anActor();
 
     test('should be a function', () => {
       expect(typeof faker['_name']).toBe('function');
@@ -102,35 +102,31 @@ describe('CastMemberFakeBuilder unit tests', () => {
   });
 
   describe('type prop', () => {
-    const faker = CastMemberFakeBuilder.aCastMember();
+    const faker = CastMemberFakeBuilder.anActor();
 
-    test('should be a function', () => {
-      expect(typeof faker['_type']).toBe('function');
-    });
-
-    test('shoud call the pickone method', () => {
-      const chance = Chance();
-      const spyPickOneMethod = jest.spyOn(chance, 'pickone');
-      faker['chance'] = chance;
-      faker.build();
-
-      expect(spyPickOneMethod).toHaveBeenCalled();
+    test('should be a CastMemberType', () => {
+      expect(faker['_type']).toBeInstanceOf(CastMemberType);
     });
 
     test('withType', () => {
-      const $this = faker.withType(CastMemberType.ACTOR);
+      const director = CastMemberType.createADirector();
+      const $this = faker.withType(director);
       expect($this).toBeInstanceOf(CastMemberFakeBuilder);
-      expect(faker['_type']).toBe(CastMemberType.ACTOR);
+      expect(faker.type).toBe(director);
 
-      expect(faker.type).toBe(CastMemberType.ACTOR);
+      const actor = CastMemberType.createAnActor();
+      faker.withType(() => actor);
+      //@ts-expect-error _type is a callable
+      expect(faker['_type']()).toBe(actor);
+      expect(faker.type).toBe(actor);
     });
   });
 
   describe('created_at prop', () => {
-    const faker = CastMemberFakeBuilder.aCastMember();
+    const faker = CastMemberFakeBuilder.anActor();
 
     test('should throw error when any with methods has called', () => {
-      const fakerCastMember = CastMemberFakeBuilder.aCastMember();
+      const fakerCastMember = CastMemberFakeBuilder.anActor();
       expect(() => fakerCastMember.created_at).toThrowError(
         new Error(`Property created_at not have a factory, use 'with' methods`),
       );
@@ -168,12 +164,12 @@ describe('CastMemberFakeBuilder unit tests', () => {
   });
 
   test('should create a cast member', () => {
-    const faker = CastMemberFakeBuilder.aCastMember();
+    const faker = CastMemberFakeBuilder.anActor();
     let castMember = faker.build();
 
     expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
     expect(typeof castMember.name === 'string').toBeTruthy();
-    expect(typeof castMember.type === 'number').toBeTruthy();
+    expect(castMember.type.type).toBe(CastMemberTypes.ACTOR);
     expect(castMember.created_at).toBeInstanceOf(Date);
 
     const created_at = new Date();
@@ -181,13 +177,13 @@ describe('CastMemberFakeBuilder unit tests', () => {
     castMember = faker
       .withCastMemberId(cast_member_id)
       .withName('test name')
-      .withType(CastMemberType.ACTOR)
+      .withType(CastMemberType.createADirector())
       .withCreatedAt(created_at)
       .build();
 
     expect(castMember.cast_member_id).toBe(cast_member_id);
     expect(castMember.name).toBe('test name');
-    expect(castMember.type).toBe(CastMemberType.ACTOR);
+    expect(castMember.type.type).toBe(CastMemberTypes.DIRECTOR);
     expect(castMember.created_at).toBe(created_at);
   });
 
@@ -198,7 +194,7 @@ describe('CastMemberFakeBuilder unit tests', () => {
     castMembers.forEach((castMember) => {
       expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
       expect(typeof castMember.name === 'string').toBeTruthy();
-      expect(typeof castMember.type === 'number').toBeTruthy();
+      expect(castMember.type.type).toBe(CastMemberTypes.ACTOR);
       expect(castMember.created_at).toBeInstanceOf(Date);
     });
 
@@ -207,14 +203,14 @@ describe('CastMemberFakeBuilder unit tests', () => {
     castMembers = faker
       .withCastMemberId(cast_member_id)
       .withName('test name')
-      .withType(CastMemberType.ACTOR)
+      .withType(CastMemberType.createADirector())
       .withCreatedAt(created_at)
       .build();
 
     castMembers.forEach((castMember) => {
       expect(castMember.cast_member_id).toBe(cast_member_id);
       expect(castMember.name).toBe('test name');
-      expect(castMember.type).toBe(CastMemberType.ACTOR);
+      expect(castMember.type.type).toBe(CastMemberTypes.DIRECTOR);
       expect(castMember.created_at).toBe(created_at);
     });
   });

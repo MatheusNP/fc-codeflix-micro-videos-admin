@@ -1,6 +1,6 @@
 import { Chance } from 'chance';
 import { CastMember, CastMemberId } from './cast-member.aggregate';
-import { CastMemberType, CastMemberTypeValues } from './cast-member.type';
+import { CastMemberType } from './cast-member-type.vo';
 
 type PropOrFactory<T> = T | ((index: number) => T);
 
@@ -11,14 +11,34 @@ export class CastMemberFakeBuilder<TBuild = any> {
   private _name: PropOrFactory<string> = (_index) => this.chance.word();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private _type: PropOrFactory<CastMemberType> = (_index) =>
-    this.chance.pickone(CastMemberTypeValues);
+    CastMemberType.createAnActor();
   // auto generated in entity
   private _created_at: PropOrFactory<Date> | undefined = undefined;
 
   private countObjs;
 
-  static aCastMember() {
-    return new CastMemberFakeBuilder<CastMember>();
+  static aDirector() {
+    return new CastMemberFakeBuilder<CastMember>().withType(
+      CastMemberType.createADirector(),
+    );
+  }
+
+  static anActor() {
+    return new CastMemberFakeBuilder<CastMember>().withType(
+      CastMemberType.createAnActor(),
+    );
+  }
+
+  static theDirectors(countObjs: number) {
+    return new CastMemberFakeBuilder<CastMember[]>(countObjs).withType(
+      CastMemberType.createADirector(),
+    );
+  }
+
+  static theActors(countObjs: number) {
+    return new CastMemberFakeBuilder<CastMember[]>(countObjs).withType(
+      CastMemberType.createAnActor(),
+    );
   }
 
   static theCastMembers(countObjs: number) {
@@ -42,8 +62,8 @@ export class CastMemberFakeBuilder<TBuild = any> {
     return this;
   }
 
-  withType(value: CastMemberType) {
-    this._type = value;
+  withType(valueOrFactory: PropOrFactory<CastMemberType>) {
+    this._type = valueOrFactory;
     return this;
   }
 
@@ -54,11 +74,6 @@ export class CastMemberFakeBuilder<TBuild = any> {
 
   withInvalidNameTooLong(value?: string) {
     this._name = value ?? this.chance.word({ length: 256 });
-    return this;
-  }
-
-  withInvalidType(value?: CastMemberType) {
-    this._type = value ?? (-1 as CastMemberType);
     return this;
   }
 

@@ -1,9 +1,7 @@
+import { CastMemberType, CastMemberTypes } from '../cast-member-type.vo';
 import { CastMember, CastMemberId } from '../cast-member.aggregate';
-import { CastMemberType, CastMemberTypeValues } from '../cast-member.type';
 
 describe('CastMember entity unit tests', () => {
-  const castMemberTypeValues = CastMemberTypeValues.join(', ');
-
   beforeAll(() => {
     CastMember.prototype.validate = jest
       .fn()
@@ -14,12 +12,12 @@ describe('CastMember entity unit tests', () => {
     test('should initialize constructor with default fields', () => {
       const castMember = new CastMember({
         name: 'Actor',
-        type: CastMemberType.ACTOR,
+        type: CastMemberType.createAnActor(),
       });
 
       expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
       expect(castMember.name).toBe('Actor');
-      expect(castMember.type).toBe(CastMemberType.ACTOR);
+      expect(castMember.type.type).toBe(CastMemberTypes.ACTOR);
       expect(castMember.created_at).toBeInstanceOf(Date);
     });
 
@@ -27,13 +25,13 @@ describe('CastMember entity unit tests', () => {
       const created_at = new Date();
       const castMember = new CastMember({
         name: 'Actor',
-        type: CastMemberType.ACTOR,
+        type: CastMemberType.createAnActor(),
         created_at,
       });
 
       expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
       expect(castMember.name).toBe('Actor');
-      expect(castMember.type).toBe(CastMemberType.ACTOR);
+      expect(castMember.type.type).toBe(CastMemberTypes.ACTOR);
       expect(castMember.created_at).toBe(created_at);
     });
   });
@@ -42,12 +40,12 @@ describe('CastMember entity unit tests', () => {
     test('should create a cast member', () => {
       const castMember = CastMember.create({
         name: 'Actor',
-        type: CastMemberType.ACTOR,
+        type: CastMemberType.createAnActor(),
       });
 
       expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
       expect(castMember.name).toBe('Actor');
-      expect(castMember.type).toBe(CastMemberType.ACTOR);
+      expect(castMember.type.type).toBe(CastMemberTypes.ACTOR);
       expect(castMember.created_at).toBeInstanceOf(Date);
     });
   });
@@ -62,7 +60,7 @@ describe('CastMember entity unit tests', () => {
     test.each(arrange)('id = %j', ({ cast_member_id }) => {
       const castMember = new CastMember({
         name: 'Actor',
-        type: CastMemberType.ACTOR,
+        type: CastMemberType.createAnActor(),
         cast_member_id: cast_member_id as any,
       });
       expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
@@ -75,7 +73,7 @@ describe('CastMember entity unit tests', () => {
   test('should change the name of a cast member', () => {
     const castMember = CastMember.create({
       name: 'Actor',
-      type: CastMemberType.ACTOR,
+      type: CastMemberType.createAnActor(),
     });
 
     castMember.changeName('Actor 2');
@@ -87,12 +85,12 @@ describe('CastMember entity unit tests', () => {
   test('should change the type of a cast member', () => {
     const castMember = CastMember.create({
       name: 'Actor',
-      type: CastMemberType.ACTOR,
+      type: CastMemberType.createAnActor(),
     });
 
-    castMember.changeType(CastMemberType.DIRECTOR);
+    castMember.changeType(CastMemberType.createADirector());
 
-    expect(castMember.type).toBe(CastMemberType.DIRECTOR);
+    expect(castMember.type.type).toBe(CastMemberTypes.DIRECTOR);
     expect(CastMember.prototype.validate).toHaveBeenCalledTimes(2);
   });
 
@@ -101,29 +99,13 @@ describe('CastMember entity unit tests', () => {
       test('should throw error when name is invalid', () => {
         const castMember = CastMember.create({
           name: 't'.repeat(256),
-          type: CastMemberType.ACTOR,
+          type: CastMemberType.createAnActor(),
         });
 
         expect(castMember.notification.hasErrors()).toBeTruthy();
         expect(castMember.notification).notificationContainsErrorMessages([
           {
             name: ['name must be shorter than or equal to 255 characters'],
-          },
-        ]);
-      });
-
-      test('should throw error when type is invalid', () => {
-        const castMember = CastMember.create({
-          name: 'Actor',
-          type: 0,
-        });
-
-        expect(castMember.notification.hasErrors()).toBeTruthy();
-        expect(castMember.notification).notificationContainsErrorMessages([
-          {
-            type: [
-              `type must be one of the following values: ${castMemberTypeValues}`,
-            ],
           },
         ]);
       });
@@ -133,7 +115,7 @@ describe('CastMember entity unit tests', () => {
       it('should throw error when name is invalid', () => {
         const castMember = CastMember.create({
           name: 'Actor',
-          type: CastMemberType.ACTOR,
+          type: CastMemberType.createAnActor(),
         });
 
         castMember.changeName('t'.repeat(256));
@@ -142,26 +124,6 @@ describe('CastMember entity unit tests', () => {
         expect(castMember.notification).notificationContainsErrorMessages([
           {
             name: ['name must be shorter than or equal to 255 characters'],
-          },
-        ]);
-      });
-    });
-
-    describe('changeType method unit tests', () => {
-      it('should throw error when type is invalid', () => {
-        const castMember = CastMember.create({
-          name: 'Actor',
-          type: CastMemberType.ACTOR,
-        });
-
-        castMember.changeType(0 as any);
-
-        expect(castMember.notification.hasErrors()).toBeTruthy();
-        expect(castMember.notification).notificationContainsErrorMessages([
-          {
-            type: [
-              `type must be one of the following values: ${castMemberTypeValues}`,
-            ],
           },
         ]);
       });

@@ -1,8 +1,8 @@
 import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
-import { CastMemberType } from './cast-member.type';
 import { CastMemberValidatorFactory } from './cast-member.validator';
 import { CastMemberFakeBuilder } from './cast-member-fake.builder';
 import { AggregateRoot } from '@core/shared/domain/aggregate-root';
+import { CastMemberType } from './cast-member-type.vo';
 
 export type CastMemberConstructorProps = {
   cast_member_id?: CastMemberId;
@@ -60,7 +60,7 @@ export class CastMember extends AggregateRoot {
     return {
       cast_member_id: this.cast_member_id.id,
       name: this.name,
-      type: this.type,
+      type: this.type.type,
       created_at: this.created_at,
     };
   }

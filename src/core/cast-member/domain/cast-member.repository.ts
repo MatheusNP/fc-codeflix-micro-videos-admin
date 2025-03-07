@@ -5,11 +5,17 @@ import {
 import { SearchResult } from '@core/shared/domain/repository/search-result';
 import { ISearchableRepository } from '@core/shared/domain/repository/repository-interface';
 import { CastMember, CastMemberId } from './cast-member.aggregate';
-import { CastMemberType } from './cast-member.type';
+import {
+  CastMemberType,
+  CastMemberTypes,
+  InvalidCastMemberTypeError,
+} from './cast-member-type.vo';
+import { Either } from '@core/shared/domain/either';
+import { SearchValidationError } from '@core/shared/domain/validators/validation-error';
 
 export type CastMemberFilter = {
-  name?: string | null;
-  type?: CastMemberType | null;
+  name?: string;
+  type?: CastMemberType;
 };
 
 export class CastMemberSearchParams extends SearchParams<CastMemberFilter> {
@@ -22,16 +28,31 @@ export class CastMemberSearchParams extends SearchParams<CastMemberFilter> {
   static create(
     props: Omit<SearchParamsConstructorProps<CastMemberFilter>, 'filter'> & {
       filter?: {
-        name?: string | null;
-        type?: CastMemberType | null;
+        name?: string;
+        type?: CastMemberTypes;
       };
     } = {},
   ) {
+    const [type, errorCastMemberType] = Either.of(props.filter?.type)
+      .map((type) => type || null)
+      .chain<CastMemberType | null, InvalidCastMemberTypeError>((type) =>
+        type ? CastMemberType.create(type) : Either.of(null),
+      )
+      .asArray();
+
+    if (errorCastMemberType) {
+      const error = new SearchValidationError([
+        { type: [errorCastMemberType.message] },
+      ]);
+
+      throw error;
+    }
+
     return new CastMemberSearchParams({
       ...props,
       filter: {
         name: props.filter?.name,
-        type: props.filter?.type,
+        type,
       },
     });
   }
@@ -47,8 +68,8 @@ export class CastMemberSearchParams extends SearchParams<CastMemberFilter> {
         : value;
 
     const filter = {
-      ...(value && _value.name && { name: `${_value?.name}` }),
-      ...(value && _value.type && { type: _value?.type }),
+      ...(_value.name && { name: `${_value.name}` }),
+      ...(_value.type && { type: _value.type }),
     };
 
     this._filter = Object.keys(filter).length === 0 ? null : filter;
