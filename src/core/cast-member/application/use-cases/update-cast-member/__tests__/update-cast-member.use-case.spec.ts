@@ -5,7 +5,7 @@ import {
   CastMember,
   CastMemberId,
 } from '@core/cast-member/domain/cast-member.aggregate';
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
+import { CastMemberTypes } from '@core/cast-member/domain/cast-member-type.vo';
 
 describe('UpdateCastMemberUseCase Unit Tests', () => {
   let repository: CastMemberInMemoryRepository;
@@ -22,26 +22,26 @@ describe('UpdateCastMemberUseCase Unit Tests', () => {
       useCase.execute({
         id: castMemberId.id,
         name: 'fake name',
-        type: CastMemberType.ACTOR,
+        type: CastMemberTypes.ACTOR,
       }),
     ).rejects.toThrow(new NotFoundError(castMemberId.id, CastMember));
   });
 
   it('should update a cast member', async () => {
-    const items = [CastMember.fake().aCastMember().build()];
+    const items = [CastMember.fake().aDirector().build()];
     repository.items = items;
     const spyUpdate = jest.spyOn(repository, 'update');
 
     const output = await useCase.execute({
       id: items[0].cast_member_id.id,
       name: 'fake name',
-      type: CastMemberType.ACTOR,
+      type: CastMemberTypes.ACTOR,
     });
     expect(spyUpdate).toHaveBeenCalledTimes(1);
     expect(output).toStrictEqual({
       id: items[0].cast_member_id.id,
       name: 'fake name',
-      type: CastMemberType.ACTOR,
+      type: CastMemberTypes.ACTOR,
       created_at: items[0].created_at,
     });
 
@@ -54,19 +54,19 @@ describe('UpdateCastMemberUseCase Unit Tests', () => {
         expected: {
           id: items[0].cast_member_id.id,
           name: 'Actor',
-          type: CastMemberType.ACTOR,
+          type: CastMemberTypes.ACTOR,
           created_at: items[0].created_at,
         },
       },
       {
         input: {
           id: items[0].cast_member_id.id,
-          type: CastMemberType.DIRECTOR,
+          type: CastMemberTypes.DIRECTOR,
         },
         expected: {
           id: items[0].cast_member_id.id,
           name: 'Actor',
-          type: CastMemberType.DIRECTOR,
+          type: CastMemberTypes.DIRECTOR,
           created_at: items[0].created_at,
         },
       },
@@ -74,12 +74,12 @@ describe('UpdateCastMemberUseCase Unit Tests', () => {
         input: {
           id: items[0].cast_member_id.id,
           name: 'new name',
-          type: CastMemberType.ACTOR,
+          type: CastMemberTypes.ACTOR,
         },
         expected: {
           id: items[0].cast_member_id.id,
           name: 'new name',
-          type: CastMemberType.ACTOR,
+          type: CastMemberTypes.ACTOR,
           created_at: items[0].created_at,
         },
       },

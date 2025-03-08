@@ -4,7 +4,7 @@ import { setupSequelize } from '@core/shared/infra/testing/helpers';
 import { CastMemberModel } from '@core/cast-member/infra/db/sequelize/cast-member.model';
 import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
 import { CastMemberOutputMapper } from '../../common/cast-member-output';
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
+import { CastMemberTypes } from '@core/cast-member/domain/cast-member-type.vo';
 
 describe('ListCastMembersUseCase Integration Tests', () => {
   let repository: CastMemberSequelizeRepository;
@@ -36,31 +36,11 @@ describe('ListCastMembersUseCase Integration Tests', () => {
 
   it('should return output using pagination, sort and filter', async () => {
     const castMembers = [
-      CastMember.fake()
-        .aCastMember()
-        .withName('a')
-        .withType(CastMemberType.ACTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('AAA')
-        .withType(CastMemberType.DIRECTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('AaA')
-        .withType(CastMemberType.DIRECTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('b')
-        .withType(CastMemberType.DIRECTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('c')
-        .withType(CastMemberType.ACTOR)
-        .build(),
+      CastMember.fake().anActor().withName('a').build(),
+      CastMember.fake().aDirector().withName('AAA').build(),
+      CastMember.fake().aDirector().withName('AaA').build(),
+      CastMember.fake().aDirector().withName('b').build(),
+      CastMember.fake().anActor().withName('c').build(),
     ];
     await repository.bulkInsert(castMembers);
 
@@ -115,7 +95,7 @@ describe('ListCastMembersUseCase Integration Tests', () => {
       page: 1,
       per_page: 2,
       sort: 'name',
-      filter: { type: CastMemberType.DIRECTOR },
+      filter: { type: CastMemberTypes.DIRECTOR },
     });
     expect(output).toStrictEqual({
       items: [castMembers[1], castMembers[2]].map(
@@ -131,7 +111,7 @@ describe('ListCastMembersUseCase Integration Tests', () => {
       page: 2,
       per_page: 2,
       sort: 'name',
-      filter: { type: CastMemberType.DIRECTOR },
+      filter: { type: CastMemberTypes.DIRECTOR },
     });
     expect(output).toStrictEqual({
       items: [castMembers[3]].map(CastMemberOutputMapper.toOutput),
@@ -145,7 +125,7 @@ describe('ListCastMembersUseCase Integration Tests', () => {
       page: 1,
       per_page: 2,
       sort: 'name',
-      filter: { name: 'a', type: CastMemberType.DIRECTOR },
+      filter: { name: 'a', type: CastMemberTypes.DIRECTOR },
     });
     expect(output).toStrictEqual({
       items: [castMembers[1], castMembers[2]].map(

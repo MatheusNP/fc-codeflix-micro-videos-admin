@@ -13,9 +13,11 @@ export class CastMemberType extends ValueObject {
   }
 
   private validate() {
-    const isValid = Object.values(CastMemberTypes).includes(this.type);
+    const _type = Number(this.type);
+
+    const isValid = Object.values(CastMemberTypes).includes(_type);
     if (!isValid) {
-      throw new InvalidCastMemberTypeError(this.type);
+      throw new InvalidCastMemberTypeError(_type);
     }
   }
 

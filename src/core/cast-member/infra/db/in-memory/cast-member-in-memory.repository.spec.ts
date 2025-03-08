@@ -1,6 +1,6 @@
 import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
 import { CastMemberInMemoryRepository } from './cast-member-in-memory.repository';
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
+import { CastMemberType } from '@core/cast-member/domain/cast-member-type.vo';
 
 describe('CastMemberInMemoryRepository Unit Tests', () => {
   let repository: CastMemberInMemoryRepository;
@@ -8,7 +8,7 @@ describe('CastMemberInMemoryRepository Unit Tests', () => {
   beforeEach(() => (repository = new CastMemberInMemoryRepository()));
 
   it('should no filter items when filter object is null', async () => {
-    const items = [CastMember.fake().aCastMember().build()];
+    const items = [CastMember.fake().anActor().build()];
     const filterSpy = jest.spyOn(items, 'filter' as any);
 
     const itemsFiltered = await repository['applyFilter'](items, null);
@@ -18,21 +18,9 @@ describe('CastMemberInMemoryRepository Unit Tests', () => {
 
   it('should filter items using filter by name parameter', async () => {
     const items = [
-      CastMember.fake()
-        .aCastMember()
-        .withName('test')
-        .withType(CastMemberType.ACTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('TEST')
-        .withType(CastMemberType.ACTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('fake')
-        .withType(CastMemberType.ACTOR)
-        .build(),
+      CastMember.fake().anActor().withName('test').build(),
+      CastMember.fake().anActor().withName('TEST').build(),
+      CastMember.fake().anActor().withName('fake').build(),
     ];
     const filterSpy = jest.spyOn(items, 'filter' as any);
 
@@ -45,26 +33,14 @@ describe('CastMemberInMemoryRepository Unit Tests', () => {
 
   it('should filter items using filter by type parameter', async () => {
     const items = [
-      CastMember.fake()
-        .aCastMember()
-        .withName('test')
-        .withType(CastMemberType.ACTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('TEST')
-        .withType(CastMemberType.DIRECTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('fake')
-        .withType(CastMemberType.ACTOR)
-        .build(),
+      CastMember.fake().anActor().withName('test').build(),
+      CastMember.fake().aDirector().withName('TEST').build(),
+      CastMember.fake().anActor().withName('fake').build(),
     ];
     const filterSpy = jest.spyOn(items, 'filter' as any);
 
     const itemsFiltered = await repository['applyFilter'](items, {
-      type: CastMemberType.ACTOR,
+      type: CastMemberType.createAnActor(),
     });
     expect(filterSpy).toHaveBeenCalledTimes(1);
     expect(itemsFiltered).toStrictEqual([items[0], items[2]]);
@@ -72,27 +48,15 @@ describe('CastMemberInMemoryRepository Unit Tests', () => {
 
   it('should filter items using filter by name and type parameter', async () => {
     const items = [
-      CastMember.fake()
-        .aCastMember()
-        .withName('fake')
-        .withType(CastMemberType.ACTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('TEST')
-        .withType(CastMemberType.ACTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('test')
-        .withType(CastMemberType.DIRECTOR)
-        .build(),
+      CastMember.fake().anActor().withName('fake').build(),
+      CastMember.fake().anActor().withName('TEST').build(),
+      CastMember.fake().aDirector().withName('test').build(),
     ];
     const filterSpy = jest.spyOn(items, 'filter' as any);
 
     const itemsFiltered = await repository['applyFilter'](items, {
       name: 'TEST',
-      type: CastMemberType.ACTOR,
+      type: CastMemberType.createAnActor(),
     });
     expect(filterSpy).toHaveBeenCalledTimes(1);
     expect(itemsFiltered).toStrictEqual([items[1]]);
@@ -103,21 +67,18 @@ describe('CastMemberInMemoryRepository Unit Tests', () => {
 
     const items = [
       CastMember.fake()
-        .aCastMember()
+        .anActor()
         .withName('test')
-        .withType(CastMemberType.ACTOR)
         .withCreatedAt(created_at)
         .build(),
       CastMember.fake()
-        .aCastMember()
+        .anActor()
         .withName('TEST')
-        .withType(CastMemberType.ACTOR)
         .withCreatedAt(new Date(created_at.getTime() + 100))
         .build(),
       CastMember.fake()
-        .aCastMember()
+        .anActor()
         .withName('fake')
-        .withType(CastMemberType.ACTOR)
         .withCreatedAt(new Date(created_at.getTime() + 200))
         .build(),
     ];
@@ -128,21 +89,9 @@ describe('CastMemberInMemoryRepository Unit Tests', () => {
 
   it('should sort by name', async () => {
     const items = [
-      CastMember.fake()
-        .aCastMember()
-        .withName('c')
-        .withType(CastMemberType.ACTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('b')
-        .withType(CastMemberType.ACTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('a')
-        .withType(CastMemberType.ACTOR)
-        .build(),
+      CastMember.fake().anActor().withName('c').build(),
+      CastMember.fake().anActor().withName('b').build(),
+      CastMember.fake().anActor().withName('a').build(),
     ];
 
     let itemsSorted = repository['applySort'](items, 'name', 'asc');

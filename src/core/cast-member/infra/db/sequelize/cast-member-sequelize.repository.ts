@@ -83,8 +83,8 @@ export class CastMemberSequelizeRepository implements ICastMemberRepository {
         where['name'] = { [Op.like]: `%${props.filter.name}%` };
       }
 
-      if (typeof props.filter.type !== 'undefined') {
-        where['type'] = props.filter.type;
+      if (props.filter.type) {
+        where['type'] = props.filter.type.type;
       }
     }
 

@@ -47,6 +47,7 @@ export class CastMembersController {
 
   @Get()
   async search(@Query() searchCastMembersDto: SearchCastMembersDto) {
+    console.log('searchCastMembersDto: ', JSON.stringify(searchCastMembersDto));
     const output =
       await this.listCastMembersUseCase.execute(searchCastMembersDto);
     return new CastMemberCollectionPresenter(output);

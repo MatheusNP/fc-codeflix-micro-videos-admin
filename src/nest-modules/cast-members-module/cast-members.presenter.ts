@@ -1,13 +1,13 @@
 import { CastMemberOutput } from '@core/cast-member/application/use-cases/common/cast-member-output';
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
 import { Transform } from 'class-transformer';
 import { CollectionPresenter } from '../shared-module/collection.presenter';
 import { ListCastMembersOutput } from '@core/cast-member/application/use-cases/list-cast-members/list-cast-members.use-case';
+import { CastMemberTypes } from '@core/cast-member/domain/cast-member-type.vo';
 
 export class CastMemberPresenter {
   id: string;
   name: string;
-  type: CastMemberType;
+  type: CastMemberTypes;
   @Transform(({ value }: { value: Date }) => value.toISOString())
   created_at: Date;
 

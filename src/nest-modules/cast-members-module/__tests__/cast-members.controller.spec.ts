@@ -1,7 +1,6 @@
 import { CreateCastMemberOutput } from '@core/cast-member/application/use-cases/create-cast-member/create-cast-member.use-case';
 import { CastMembersController } from '../cast-members.controller';
 import { CreateCastMemberDto } from '../dto/create-cast-member.dto';
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
 import {
   CastMemberCollectionPresenter,
   CastMemberPresenter,
@@ -11,6 +10,7 @@ import { UpdateCastMemberDto } from '../dto/update-cast-member.dto';
 import { GetCastMemberOutput } from '@core/cast-member/application/use-cases/get-cast-member/get-cast-member.use-case';
 import { ListCastMembersOutput } from '@core/cast-member/application/use-cases/list-cast-members/list-cast-members.use-case';
 import { SortDirection } from '@core/shared/domain/repository/search-params';
+import { CastMemberTypes } from '@core/cast-member/domain/cast-member-type.vo';
 
 describe('CastMembersController Unit Tests', () => {
   let controller: CastMembersController;
@@ -23,7 +23,7 @@ describe('CastMembersController Unit Tests', () => {
     const output: CreateCastMemberOutput = {
       id: '123e4567-e89b-12d3-a456-426655440000',
       name: 'test',
-      type: CastMemberType.ACTOR,
+      type: CastMemberTypes.ACTOR,
       created_at: new Date(),
     };
 
@@ -35,7 +35,7 @@ describe('CastMembersController Unit Tests', () => {
     controller['createCastMemberUseCase'] = mockCreateUseCase;
     const input: CreateCastMemberDto = {
       name: 'test',
-      type: CastMemberType.ACTOR,
+      type: CastMemberTypes.ACTOR,
     };
 
     const presenter = await controller.create(input);
@@ -50,7 +50,7 @@ describe('CastMembersController Unit Tests', () => {
     const output: UpdateCastMemberOutput = {
       id,
       name: 'test',
-      type: CastMemberType.ACTOR,
+      type: CastMemberTypes.ACTOR,
       created_at: new Date(),
     };
 
@@ -62,7 +62,7 @@ describe('CastMembersController Unit Tests', () => {
     controller['updateCastMemberUseCase'] = mockUpdateUseCase;
     const input: UpdateCastMemberDto = {
       name: 'new test',
-      type: CastMemberType.DIRECTOR,
+      type: CastMemberTypes.DIRECTOR,
     };
 
     const presenter = await controller.update(id, input);
@@ -95,7 +95,7 @@ describe('CastMembersController Unit Tests', () => {
     const output: GetCastMemberOutput = {
       id,
       name: 'test',
-      type: CastMemberType.ACTOR,
+      type: CastMemberTypes.ACTOR,
       created_at: new Date(),
     };
     const mockGetUseCase = {
@@ -117,7 +117,7 @@ describe('CastMembersController Unit Tests', () => {
         {
           id: '123e4567-e89b-12d3-a456-426655440000',
           name: 'test',
-          type: CastMemberType.ACTOR,
+          type: CastMemberTypes.ACTOR,
           created_at: new Date(),
         },
       ],

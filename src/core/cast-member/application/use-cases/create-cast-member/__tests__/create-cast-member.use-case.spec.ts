@@ -1,6 +1,9 @@
 import { CastMemberInMemoryRepository } from '@core/cast-member/infra/db/in-memory/cast-member-in-memory.repository';
 import { CreateCastMemberUseCase } from '../create-cast-member.use-case';
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
+import {
+  CastMemberType,
+  CastMemberTypes,
+} from '@core/cast-member/domain/cast-member-type.vo';
 
 describe('CreateCastMemberUseCase unit tests', () => {
   let repository: CastMemberInMemoryRepository;
@@ -15,11 +18,11 @@ describe('CreateCastMemberUseCase unit tests', () => {
     const arrange = [
       {
         name: 't'.repeat(256),
-        type: CastMemberType.ACTOR,
+        type: CastMemberTypes.ACTOR,
       },
       {
         name: 'test',
-        type: 0 as CastMemberType,
+        type: 0 as CastMemberTypes,
       },
     ];
 
@@ -36,27 +39,27 @@ describe('CreateCastMemberUseCase unit tests', () => {
     const spyInsert = jest.spyOn(repository, 'insert');
     let output = await useCase.execute({
       name: 'actor',
-      type: CastMemberType.ACTOR,
+      type: CastMemberTypes.ACTOR,
     });
 
     expect(spyInsert).toHaveBeenCalledTimes(1);
     expect(output).toStrictEqual({
       id: repository.items[0].cast_member_id.id,
       name: repository.items[0].name,
-      type: repository.items[0].type,
+      type: repository.items[0].type.type,
       created_at: repository.items[0].created_at,
     });
 
     output = await useCase.execute({
       name: 'director',
-      type: CastMemberType.DIRECTOR,
+      type: CastMemberTypes.DIRECTOR,
     });
 
     expect(spyInsert).toHaveBeenCalledTimes(2);
     expect(output).toStrictEqual({
       id: repository.items[1].cast_member_id.id,
       name: 'director',
-      type: CastMemberType.DIRECTOR,
+      type: CastMemberType.createADirector().type,
       created_at: repository.items[1].created_at,
     });
   });

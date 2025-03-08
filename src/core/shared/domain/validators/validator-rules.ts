@@ -1,7 +1,10 @@
-import { ValidationError } from './validation-error';
+import { ValidationError } from './validation.error';
 
 export class ValidatorRules {
-  private constructor(private value: any, private property: string) {}
+  private constructor(
+    private value: any,
+    private property: string,
+  ) {}
 
   static values(value: any, property: string) {
     return new ValidatorRules(value, property);
@@ -25,7 +28,7 @@ export class ValidatorRules {
   maxLength(max: number): Omit<this, 'maxLength'> {
     if (!isEmpty(this.value) && this.value.length > max) {
       throw new ValidationError(
-        `The ${this.property} must be less than ${max} characters`
+        `The ${this.property} must be less than ${max} characters`,
       );
     }
     return this;

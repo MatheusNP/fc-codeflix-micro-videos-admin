@@ -22,11 +22,11 @@ export class Either<Ok, ErrorType = Error>
   }
 
   isOk() {
-    return this._ok !== null;
+    return this.ok !== null;
   }
 
   isFail() {
-    return this._error !== null;
+    return this.error !== null;
   }
 
   static of<Ok = any>(value: Ok): Either<Ok> {
@@ -50,10 +50,8 @@ export class Either<Ok, ErrorType = Error>
   }
 
   /**
-   * This method is used to map the value of the Ok variant.
-   * The newvalue always will be Ok.
-   * @param fn
-   * @returns
+   * This method is used to transform the value into a new value.
+   * The new value always will be a ok.
    */
   map<NewOk>(fn: (value: Ok) => NewOk): Either<NewOk, ErrorType> {
     if (this.isOk()) {
@@ -64,9 +62,7 @@ export class Either<Ok, ErrorType = Error>
 
   /**
    * This method is used to create a new Either from the value of an Either.
-   * The new Either can be Ok or Fail.
-   * @param fn
-   * @returns
+   * The new Either can be a fail or a ok.
    */
   chain<NewOk, NewError = any>(
     fn: (value: Ok) => Either<NewOk, NewError>,
@@ -81,9 +77,7 @@ export class Either<Ok, ErrorType = Error>
    * This method is used to create a new Either from the value of an Either.
    * This method is used to work with arrays.
    * If one of the values is a fail, the new Either will be a fail.
-   * The new Either can be Ok or Fail.
-   * @param fn
-   * @returns
+   * The new Either can be a fail or a ok.
    */
   chainEach<NewOk, NewError>(
     fn: (value: Flatten<Ok>) => Either<Flatten<NewOk>, Flatten<NewError>>,

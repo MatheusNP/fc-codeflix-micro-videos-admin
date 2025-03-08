@@ -30,7 +30,7 @@ export class CastMemberInMemoryRepository
     return items.filter((i) => {
       const containsName =
         filter.name && i.name.toLowerCase().includes(filter.name.toLowerCase());
-      const hasType = filter.type && i.type === filter.type;
+      const hasType = filter.type && i.type.equals(filter.type);
 
       return filter.name && filter.type
         ? containsName && hasType

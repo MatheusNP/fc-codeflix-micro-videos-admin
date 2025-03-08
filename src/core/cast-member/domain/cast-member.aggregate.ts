@@ -11,6 +11,11 @@ export type CastMemberConstructorProps = {
   created_at?: Date;
 };
 
+export type CastMemberCreateCommand = {
+  name: string;
+  type: CastMemberType;
+};
+
 export class CastMemberId extends Uuid {}
 
 export class CastMember extends AggregateRoot {
@@ -38,12 +43,11 @@ export class CastMember extends AggregateRoot {
 
   changeType(type: CastMemberType) {
     this.type = type;
-    this.validate(['type']);
   }
 
-  static create(props: any) {
+  static create(props: CastMemberCreateCommand) {
     const castMember = new CastMember(props);
-    castMember.validate(['name', 'type']);
+    castMember.validate(['name']);
     return castMember;
   }
 

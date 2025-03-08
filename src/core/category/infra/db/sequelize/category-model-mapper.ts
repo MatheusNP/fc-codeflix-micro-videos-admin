@@ -1,4 +1,4 @@
-import { EntityValidationError } from '../../../../shared/domain/validators/validation-error';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
 import { Category, CategoryId } from '../../../domain/category.aggregate';
 import { CategoryModel } from './category.model';
 

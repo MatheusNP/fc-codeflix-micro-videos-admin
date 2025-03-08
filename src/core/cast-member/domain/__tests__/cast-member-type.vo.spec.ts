@@ -8,10 +8,10 @@ import {
 describe('CastMemberType Unit Tests', () => {
   it('should return error when type is invalid', () => {
     const validateSpy = jest.spyOn(CastMemberType.prototype, 'validate' as any);
-    const [vo, error] = CastMemberType.create('1' as any);
+    const [vo, error] = CastMemberType.create(0 as any);
 
     expect(vo).toBeNull();
-    expect(error).toEqual(new InvalidCastMemberTypeError('1'));
+    expect(error).toEqual(new InvalidCastMemberTypeError(0));
     expect(validateSpy).toHaveBeenCalledTimes(1);
   });
 

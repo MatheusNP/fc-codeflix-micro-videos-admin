@@ -28,14 +28,14 @@ describe('DeleteCastMemberUseCase Unit Tests', () => {
   });
 
   it('should get a cast member', async () => {
-    const items = [CastMember.fake().aCastMember().build()];
+    const items = [CastMember.fake().anActor().build()];
     repository.items = items;
 
     const output = await useCase.execute({ id: items[0].cast_member_id.id });
     expect(output).toStrictEqual({
       id: items[0].cast_member_id.id,
       name: items[0].name,
-      type: items[0].type,
+      type: items[0].type.type,
       created_at: items[0].created_at,
     });
   });

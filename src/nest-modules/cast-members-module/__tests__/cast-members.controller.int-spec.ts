@@ -78,7 +78,7 @@ describe('CastMembersController Integration Tests', () => {
   describe('should update a cast member', () => {
     const arrange = UpdateCastMemberFixture.arrangeForUpdate();
 
-    const castMember = CastMember.fake().aCastMember().build();
+    const castMember = CastMember.fake().anActor().build();
 
     beforeEach(async () => {
       await repository.insert(castMember);
@@ -107,7 +107,7 @@ describe('CastMembersController Integration Tests', () => {
   });
 
   it('should delete a cast member', async () => {
-    const castMember = CastMember.fake().aCastMember().build();
+    const castMember = CastMember.fake().anActor().build();
     await repository.insert(castMember);
     const response = await controller.remove(castMember.cast_member_id.id);
     expect(response).toBeUndefined();
@@ -117,14 +117,14 @@ describe('CastMembersController Integration Tests', () => {
   });
 
   it('should get a cast member', async () => {
-    const castMember = CastMember.fake().aCastMember().build();
+    const castMember = CastMember.fake().anActor().build();
     await repository.insert(castMember);
     const presenter = await controller.findOne(castMember.cast_member_id.id);
     const output = CastMemberOutputMapper.toOutput(castMember);
     expect(presenter).toEqual(new CastMemberPresenter(output));
     expect(presenter.id).toBe(castMember.cast_member_id.id);
     expect(presenter.name).toBe(castMember.name);
-    expect(presenter.type).toBe(castMember.type);
+    expect(presenter.type).toBe(castMember.type.type);
     expect(presenter.created_at).toStrictEqual(castMember.created_at);
   });
 

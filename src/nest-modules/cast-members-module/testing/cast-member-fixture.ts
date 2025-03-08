@@ -1,12 +1,11 @@
-import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
 import {
   CastMemberType,
-  CastMemberTypeValues,
-} from '@core/cast-member/domain/cast-member.type';
+  CastMemberTypes,
+  InvalidCastMemberTypeError,
+} from '@core/cast-member/domain/cast-member-type.vo';
+import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
 
 const _keysInResponse = ['id', 'name', 'type', 'created_at'];
-
-const castMemberTypeValues = CastMemberTypeValues.join(', ');
 
 export class GetCastMemberFixture {
   static keysInResponse = _keysInResponse;
@@ -16,20 +15,17 @@ export class CreateCastMemberFixture {
   static keysInResponse = _keysInResponse;
 
   static arrangeForCreate() {
-    const faker = CastMember.fake()
-      .aCastMember()
-      .withName('test')
-      .withType(CastMemberType.ACTOR);
+    const faker = CastMember.fake().anActor().withName('test');
 
     return [
       {
         send_data: {
           name: faker.name,
-          type: faker.type,
+          type: faker.type.type,
         },
         expected: {
           name: faker.name,
-          type: faker.type,
+          type: faker.type.type,
         },
       },
     ];
@@ -49,7 +45,7 @@ export class CreateCastMemberFixture {
             'name should not be empty',
             'name must be a string',
             'type should not be empty',
-            `type must be one of the following values: ${castMemberTypeValues}`,
+            `type must be an integer number`,
           ],
           ...defaultExpected,
         },
@@ -57,7 +53,7 @@ export class CreateCastMemberFixture {
       NAME_UNDEFINED: {
         send_data: {
           name: undefined,
-          type: CastMemberType.ACTOR,
+          type: CastMemberTypes.ACTOR,
         },
         expected: {
           message: ['name should not be empty', 'name must be a string'],
@@ -67,7 +63,7 @@ export class CreateCastMemberFixture {
       NAME_NULL: {
         send_data: {
           name: null,
-          type: CastMemberType.ACTOR,
+          type: CastMemberTypes.ACTOR,
         },
         expected: {
           message: ['name should not be empty', 'name must be a string'],
@@ -77,7 +73,7 @@ export class CreateCastMemberFixture {
       NAME_EMPTY: {
         send_data: {
           name: '',
-          type: CastMemberType.ACTOR,
+          type: CastMemberTypes.ACTOR,
         },
         expected: {
           message: ['name should not be empty'],
@@ -87,7 +83,7 @@ export class CreateCastMemberFixture {
       NAME_NOT_A_STRING: {
         send_data: {
           name: 5,
-          type: CastMemberType.ACTOR,
+          type: CastMemberTypes.ACTOR,
         },
         expected: {
           message: ['name must be a string'],
@@ -102,7 +98,7 @@ export class CreateCastMemberFixture {
         expected: {
           message: [
             'type should not be empty',
-            `type must be one of the following values: ${castMemberTypeValues}`,
+            `type must be an integer number`,
           ],
           ...defaultExpected,
         },
@@ -115,20 +111,18 @@ export class CreateCastMemberFixture {
         expected: {
           message: [
             'type should not be empty',
-            `type must be one of the following values: ${castMemberTypeValues}`,
+            `type must be an integer number`,
           ],
           ...defaultExpected,
         },
       },
-      TYPE_EMPTY: {
+      TYPE_INVALID: {
         send_data: {
           name: 'test',
           type: 0,
         },
         expected: {
-          message: [
-            `type must be one of the following values: ${castMemberTypeValues}`,
-          ],
+          message: [new InvalidCastMemberTypeError(0).message],
           ...defaultExpected,
         },
       },
@@ -138,9 +132,7 @@ export class CreateCastMemberFixture {
           type: '5',
         },
         expected: {
-          message: [
-            `type must be one of the following values: ${castMemberTypeValues}`,
-          ],
+          message: [`type must be an integer number`],
           ...defaultExpected,
         },
       },
@@ -152,7 +144,7 @@ export class CreateCastMemberFixture {
           message: [
             'name must be a string',
             'type should not be empty',
-            `type must be one of the following values: ${castMemberTypeValues}`,
+            `type must be an integer number`,
           ],
           ...defaultExpected,
         },
@@ -165,7 +157,7 @@ export class CreateCastMemberFixture {
           message: [
             'name should not be empty',
             'name must be a string',
-            `type must be one of the following values: ${castMemberTypeValues}`,
+            `type must be an integer number`,
           ],
           ...defaultExpected,
         },
@@ -174,7 +166,7 @@ export class CreateCastMemberFixture {
   }
 
   static arrangeForEntityValidationError() {
-    const faker = CastMember.fake().aCastMember();
+    const faker = CastMember.fake().anActor();
     const defaultExpected = {
       statusCode: 422,
       error: 'Unprocessable Entity',
@@ -184,7 +176,7 @@ export class CreateCastMemberFixture {
       NAME_TOO_LONG: {
         send_data: {
           name: faker.withInvalidNameTooLong().name,
-          type: faker.type,
+          type: faker.type.type,
         },
         expected: {
           message: ['name must be shorter than or equal to 255 characters'],
@@ -199,17 +191,17 @@ export class UpdateCastMemberFixture {
   static keysInResponse = _keysInResponse;
 
   static arrangeForUpdate() {
-    const faker = CastMember.fake().aCastMember().build();
+    const faker = CastMember.fake().anActor().build();
 
     return [
       {
         send_data: {
           name: faker.name,
-          type: faker.type,
+          type: faker.type.type,
         },
         expected: {
           name: faker.name,
-          type: faker.type,
+          type: faker.type.type,
         },
       },
       {
@@ -223,11 +215,11 @@ export class UpdateCastMemberFixture {
       },
       {
         send_data: {
-          type: faker.type,
+          type: faker.type.type,
         },
         expected: {
           name: expect.anything(),
-          type: faker.type,
+          type: faker.type.type,
         },
       },
     ];
@@ -254,9 +246,7 @@ export class UpdateCastMemberFixture {
           type: '5',
         },
         expected: {
-          message: [
-            `type must be one of the following values: ${castMemberTypeValues}`,
-          ],
+          message: [`type must be an integer number`],
           ...defaultExpected,
         },
       },
@@ -266,10 +256,7 @@ export class UpdateCastMemberFixture {
           type: '5',
         },
         expected: {
-          message: [
-            'name must be a string',
-            `type must be one of the following values: ${castMemberTypeValues}`,
-          ],
+          message: ['name must be a string', `type must be an integer number`],
           ...defaultExpected,
         },
       },
@@ -277,7 +264,7 @@ export class UpdateCastMemberFixture {
   }
 
   static arrangeForEntityValidationError() {
-    const faker = CastMember.fake().aCastMember();
+    const faker = CastMember.fake().anActor();
     const defaultExpected = {
       statusCode: 422,
       error: 'Unprocessable Entity',
@@ -366,14 +353,20 @@ export class ListCastMembersFixture {
   }
 
   static arrangeUnsorted() {
-    const faker = CastMember.fake().aCastMember();
+    const faker = CastMember.fake().anActor();
 
     const entitiesMap = {
-      a: faker.withName('a').withType(CastMemberType.ACTOR).build(),
-      AAA: faker.withName('AAA').withType(CastMemberType.DIRECTOR).build(),
-      AaA: faker.withName('AaA').withType(CastMemberType.DIRECTOR).build(),
-      b: faker.withName('b').withType(CastMemberType.DIRECTOR).build(),
-      c: faker.withName('c').withType(CastMemberType.ACTOR).build(),
+      a: faker.withName('a').withType(CastMemberType.createAnActor()).build(),
+      AAA: faker
+        .withName('AAA')
+        .withType(CastMemberType.createADirector())
+        .build(),
+      AaA: faker
+        .withName('AaA')
+        .withType(CastMemberType.createADirector())
+        .build(),
+      b: faker.withName('b').withType(CastMemberType.createADirector()).build(),
+      c: faker.withName('c').withType(CastMemberType.createAnActor()).build(),
     };
 
     const arrange = [
@@ -416,7 +409,7 @@ export class ListCastMembersFixture {
           page: 1,
           per_page: 2,
           sort: 'name',
-          filter: { type: CastMemberType.DIRECTOR },
+          filter: { type: CastMemberTypes.DIRECTOR },
         },
         expected: {
           entities: [entitiesMap.AAA, entitiesMap.AaA],
@@ -433,7 +426,7 @@ export class ListCastMembersFixture {
           page: 2,
           per_page: 2,
           sort: 'name',
-          filter: { type: CastMemberType.DIRECTOR },
+          filter: { type: CastMemberTypes.DIRECTOR },
         },
         expected: {
           entities: [entitiesMap.b],
@@ -450,7 +443,7 @@ export class ListCastMembersFixture {
           page: 1,
           per_page: 2,
           sort: 'name',
-          filter: { name: 'a', type: CastMemberType.DIRECTOR },
+          filter: { name: 'a', type: CastMemberTypes.DIRECTOR },
         },
         expected: {
           entities: [entitiesMap.AAA, entitiesMap.AaA],

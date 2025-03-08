@@ -1,4 +1,4 @@
-import { SearchValidationError } from '@core/shared/domain/validators/validation-error';
+import { SearchValidationError } from '@core/shared/domain/validators/validation.error';
 import { CastMemberTypes } from '../cast-member-type.vo';
 import { CastMemberSearchParams } from '../cast-member.repository';
 

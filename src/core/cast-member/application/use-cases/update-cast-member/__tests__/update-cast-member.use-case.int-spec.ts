@@ -8,8 +8,8 @@ import {
   CastMember,
   CastMemberId,
 } from '@core/cast-member/domain/cast-member.aggregate';
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
 import { CastMemberOutputMapper } from '../../common/cast-member-output';
+import { CastMemberTypes } from '@core/cast-member/domain/cast-member-type.vo';
 
 describe('DeleteCastMemberUseCase Integration Tests', () => {
   let repository: CastMemberSequelizeRepository;
@@ -46,19 +46,19 @@ describe('DeleteCastMemberUseCase Integration Tests', () => {
         expected: {
           id: items[0].cast_member_id.id,
           name: 'Actor',
-          type: items[0].type,
+          type: items[0].type.type,
           created_at: items[0].created_at,
         },
       },
       {
         input: {
           id: items[1].cast_member_id.id,
-          type: CastMemberType.DIRECTOR,
+          type: CastMemberTypes.DIRECTOR,
         },
         expected: {
           id: items[1].cast_member_id.id,
           name: items[1].name,
-          type: CastMemberType.DIRECTOR,
+          type: CastMemberTypes.DIRECTOR,
           created_at: items[1].created_at,
         },
       },
@@ -66,12 +66,12 @@ describe('DeleteCastMemberUseCase Integration Tests', () => {
         input: {
           id: items[2].cast_member_id.id,
           name: 'new name',
-          type: CastMemberType.DIRECTOR,
+          type: CastMemberTypes.DIRECTOR,
         },
         expected: {
           id: items[2].cast_member_id.id,
           name: 'new name',
-          type: CastMemberType.DIRECTOR,
+          type: CastMemberTypes.DIRECTOR,
           created_at: items[2].created_at,
         },
       },

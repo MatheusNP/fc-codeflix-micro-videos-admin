@@ -3,7 +3,7 @@ import { ListCastMembersUseCase } from '../list-cast-members.use-case';
 import { CastMemberSearchResult } from '@core/cast-member/domain/cast-member.repository';
 import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
 import { CastMemberOutputMapper } from '../../common/cast-member-output';
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
+import { CastMemberTypes } from '@core/cast-member/domain/cast-member-type.vo';
 
 describe('ListCastMembersUseCase Unit Tests', () => {
   let repository: CastMemberInMemoryRepository;
@@ -31,7 +31,7 @@ describe('ListCastMembersUseCase Unit Tests', () => {
       last_page: 1,
     });
 
-    const entity = CastMember.fake().aCastMember().build();
+    const entity = CastMember.fake().anActor().build();
     result = new CastMemberSearchResult({
       items: [entity],
       total: 1,
@@ -50,9 +50,9 @@ describe('ListCastMembersUseCase Unit Tests', () => {
 
   it('should return output sorted by created_at when input param is empty', async () => {
     const items = [
-      CastMember.fake().aCastMember().withName('test 1').build(),
+      CastMember.fake().anActor().withName('test 1').build(),
       CastMember.fake()
-        .aCastMember()
+        .anActor()
         .withName('test 2')
         .withCreatedAt(new Date(new Date().getTime() + 1000))
         .build(),
@@ -71,31 +71,11 @@ describe('ListCastMembersUseCase Unit Tests', () => {
 
   it('should return output using pagination, sort and filter', async () => {
     const items = [
-      CastMember.fake()
-        .aCastMember()
-        .withName('a')
-        .withType(CastMemberType.ACTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('AAA')
-        .withType(CastMemberType.DIRECTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('AaA')
-        .withType(CastMemberType.DIRECTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('b')
-        .withType(CastMemberType.DIRECTOR)
-        .build(),
-      CastMember.fake()
-        .aCastMember()
-        .withName('c')
-        .withType(CastMemberType.ACTOR)
-        .build(),
+      CastMember.fake().anActor().withName('a').build(),
+      CastMember.fake().aDirector().withName('AAA').build(),
+      CastMember.fake().aDirector().withName('AaA').build(),
+      CastMember.fake().aDirector().withName('b').build(),
+      CastMember.fake().anActor().withName('c').build(),
     ];
     repository.items = items;
 
@@ -146,7 +126,7 @@ describe('ListCastMembersUseCase Unit Tests', () => {
       page: 1,
       per_page: 2,
       sort: 'name',
-      filter: { type: CastMemberType.DIRECTOR },
+      filter: { type: CastMemberTypes.DIRECTOR },
     });
     expect(output).toStrictEqual({
       items: [items[1], items[2]].map(CastMemberOutputMapper.toOutput),
@@ -160,7 +140,7 @@ describe('ListCastMembersUseCase Unit Tests', () => {
       page: 2,
       per_page: 2,
       sort: 'name',
-      filter: { type: CastMemberType.DIRECTOR },
+      filter: { type: CastMemberTypes.DIRECTOR },
     });
     expect(output).toStrictEqual({
       items: [items[3]].map(CastMemberOutputMapper.toOutput),
@@ -174,7 +154,7 @@ describe('ListCastMembersUseCase Unit Tests', () => {
       page: 1,
       per_page: 2,
       sort: 'name',
-      filter: { name: 'a', type: CastMemberType.DIRECTOR },
+      filter: { name: 'a', type: CastMemberTypes.DIRECTOR },
     });
     expect(output).toStrictEqual({
       items: [items[1], items[2]].map(CastMemberOutputMapper.toOutput),

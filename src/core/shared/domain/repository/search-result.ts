@@ -1,4 +1,5 @@
 import { Entity } from '../entity';
+import { ValueObject } from '../value-object';
 
 type SearchResultProps<E extends Entity> = {
   items: E[];
@@ -7,7 +8,7 @@ type SearchResultProps<E extends Entity> = {
   per_page: number;
 };
 
-export class SearchResult<E extends Entity = Entity> {
+export class SearchResult<E extends Entity = Entity> extends ValueObject {
   readonly items: E[];
   readonly total: number;
   readonly current_page: number;
@@ -15,6 +16,7 @@ export class SearchResult<E extends Entity = Entity> {
   readonly last_page: number;
 
   constructor(props: SearchResultProps<E>) {
+    super();
     this.items = props.items;
     this.total = props.total;
     this.current_page = props.current_page;

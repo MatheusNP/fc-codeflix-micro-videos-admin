@@ -6,12 +6,15 @@ import {
   CastMemberId,
 } from '@core/cast-member/domain/cast-member.aggregate';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
 import { CastMemberModelMapper } from '../cast-member-model-mapper';
 import {
   CastMemberSearchParams,
   CastMemberSearchResult,
 } from '@core/cast-member/domain/cast-member.repository';
+import {
+  CastMemberType,
+  CastMemberTypes,
+} from '@core/cast-member/domain/cast-member-type.vo';
 
 describe('CastMemberSequelizeRepository Integration Tests', () => {
   setupSequelize({
@@ -25,7 +28,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
   });
 
   it('should create a cast member', async () => {
-    const castMember = CastMember.fake().aCastMember().build();
+    const castMember = CastMember.fake().anActor().build();
     await repository.insert(castMember);
 
     const entity = await repository.findById(castMember.cast_member_id);
@@ -36,7 +39,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
     let entityFound = await repository.findById(new CastMemberId());
     expect(entityFound).toBeNull();
 
-    const castMember = CastMember.fake().aCastMember().build();
+    const castMember = CastMember.fake().anActor().build();
     await repository.insert(castMember);
     entityFound = await repository.findById(castMember.cast_member_id);
     expect(entityFound.toJSON()).toStrictEqual(castMember.toJSON());
@@ -51,18 +54,18 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
   });
 
   it('should throw error on update when entity not found', async () => {
-    const castMember = CastMember.fake().aCastMember().build();
+    const castMember = CastMember.fake().anActor().build();
     await expect(repository.update(castMember)).rejects.toThrow(
       new NotFoundError(castMember.cast_member_id.id, CastMember),
     );
   });
 
   it('should update an entity', async () => {
-    const castMember = CastMember.fake().aCastMember().build();
+    const castMember = CastMember.fake().anActor().build();
     await repository.insert(castMember);
 
     castMember.changeName('new test name');
-    castMember.changeType(CastMemberType.DIRECTOR);
+    castMember.changeType(CastMemberType.createADirector());
     await repository.update(castMember);
 
     const entityFound = await repository.findById(castMember.cast_member_id);
@@ -77,7 +80,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
   });
 
   it('should delete an entity', async () => {
-    const castMember = CastMember.fake().aCastMember().build();
+    const castMember = CastMember.fake().anActor().build();
     await repository.insert(castMember);
     let entityFound = await repository.findById(castMember.cast_member_id);
     expect(entityFound.toJSON()).toStrictEqual(castMember.toJSON());
@@ -91,9 +94,8 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
     it('should only apply paginate when other params are null', async () => {
       const created_at = new Date();
       const castMembers = CastMember.fake()
-        .theCastMembers(16)
+        .theActors(16)
         .withName('Actor')
-        .withType(CastMemberType.ACTOR)
         .withCreatedAt(created_at)
         .build();
       await repository.bulkInsert(castMembers);
@@ -118,7 +120,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
       expect(items).toMatchObject(
         new Array(15).fill({
           name: 'Actor',
-          type: CastMemberType.ACTOR,
+          type: CastMemberTypes.ACTOR,
           created_at: created_at,
         }),
       );
@@ -143,33 +145,28 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
     it('should apply paginate and filter', async () => {
       const castMembers = [
         CastMember.fake()
-          .aCastMember()
+          .aDirector()
           .withName('test')
-          .withType(CastMemberType.DIRECTOR)
           .withCreatedAt(new Date(new Date().getTime() + 5000))
           .build(),
         CastMember.fake()
-          .aCastMember()
+          .aDirector()
           .withName('a')
-          .withType(CastMemberType.DIRECTOR)
           .withCreatedAt(new Date(new Date().getTime() + 4000))
           .build(),
         CastMember.fake()
-          .aCastMember()
+          .aDirector()
           .withName('TEST')
-          .withType(CastMemberType.DIRECTOR)
           .withCreatedAt(new Date(new Date().getTime() + 3000))
           .build(),
         CastMember.fake()
-          .aCastMember()
+          .anActor()
           .withName('TeSt')
-          .withType(CastMemberType.ACTOR)
           .withCreatedAt(new Date(new Date().getTime() + 2000))
           .build(),
         CastMember.fake()
-          .aCastMember()
+          .aDirector()
           .withName('b')
-          .withType(CastMemberType.DIRECTOR)
           .withCreatedAt(new Date(new Date().getTime() + 1000))
           .build(),
       ];
@@ -217,7 +214,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
           page: 1,
           per_page: 2,
           filter: {
-            type: CastMemberType.DIRECTOR,
+            type: CastMemberTypes.DIRECTOR,
           },
         }),
       );
@@ -235,7 +232,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
           page: 2,
           per_page: 2,
           filter: {
-            type: CastMemberType.DIRECTOR,
+            type: CastMemberTypes.DIRECTOR,
           },
         }),
       );
@@ -253,11 +250,11 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
       expect(repository.sortableFields).toStrictEqual(['name', 'created_at']);
 
       const castMembers = [
-        CastMember.fake().aCastMember().withName('b').build(),
-        CastMember.fake().aCastMember().withName('a').build(),
-        CastMember.fake().aCastMember().withName('d').build(),
-        CastMember.fake().aCastMember().withName('e').build(),
-        CastMember.fake().aCastMember().withName('c').build(),
+        CastMember.fake().anActor().withName('b').build(),
+        CastMember.fake().anActor().withName('a').build(),
+        CastMember.fake().anActor().withName('d').build(),
+        CastMember.fake().anActor().withName('e').build(),
+        CastMember.fake().anActor().withName('c').build(),
       ];
       await repository.bulkInsert(castMembers);
 
@@ -326,11 +323,11 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
 
     describe('should search using filter, sort and paginate', () => {
       const castMembers = [
-        CastMember.fake().aCastMember().withName('test').build(),
-        CastMember.fake().aCastMember().withName('a').build(),
-        CastMember.fake().aCastMember().withName('TEST').build(),
-        CastMember.fake().aCastMember().withName('e').build(),
-        CastMember.fake().aCastMember().withName('TeSt').build(),
+        CastMember.fake().anActor().withName('test').build(),
+        CastMember.fake().anActor().withName('a').build(),
+        CastMember.fake().anActor().withName('TEST').build(),
+        CastMember.fake().anActor().withName('e').build(),
+        CastMember.fake().anActor().withName('TeSt').build(),
       ];
 
       const arrange = [

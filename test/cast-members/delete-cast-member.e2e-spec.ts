@@ -42,7 +42,7 @@ describe('CastMembersController (e2e)', () => {
         CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBERS_REPOSITORY.provide,
       );
 
-      const castMember = CastMember.fake().aCastMember().build();
+      const castMember = CastMember.fake().anActor().build();
       await castMemberRepo.insert(castMember);
 
       await request(appHelper.app.getHttpServer())

@@ -39,7 +39,7 @@ describe('DeleteCastMemberUseCase Integration Tests', () => {
     expect(output).toStrictEqual({
       id: items[1].cast_member_id.id,
       name: items[1].name,
-      type: items[1].type,
+      type: items[1].type.type,
       created_at: items[1].created_at,
     });
   });

@@ -91,7 +91,7 @@ describe('CastMember entity unit tests', () => {
     castMember.changeType(CastMemberType.createADirector());
 
     expect(castMember.type.type).toBe(CastMemberTypes.DIRECTOR);
-    expect(CastMember.prototype.validate).toHaveBeenCalledTimes(2);
+    expect(CastMember.prototype.validate).toHaveBeenCalledTimes(1);
   });
 
   describe('CastMember validator unit tests', () => {

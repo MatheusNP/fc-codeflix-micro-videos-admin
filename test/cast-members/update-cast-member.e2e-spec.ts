@@ -76,7 +76,7 @@ describe('CastMembersController (e2e)', () => {
         }));
 
         test.each(arrange)('when label is $label', async ({ value }) => {
-          const castMember = CastMember.fake().aCastMember().build();
+          const castMember = CastMember.fake().anActor().build();
           await castMemberRepo.insert(castMember);
 
           return request(appHelper.app.getHttpServer())
@@ -93,7 +93,7 @@ describe('CastMembersController (e2e)', () => {
         test.each(arrange)(
           'when body is $send_data',
           async ({ send_data, expected }) => {
-            const castMember = CastMember.fake().aCastMember().build();
+            const castMember = CastMember.fake().anActor().build();
             await castMemberRepo.insert(castMember);
 
             const res = await request(appHelper.app.getHttpServer())

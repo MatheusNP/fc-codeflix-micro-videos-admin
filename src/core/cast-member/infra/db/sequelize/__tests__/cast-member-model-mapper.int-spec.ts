@@ -1,12 +1,15 @@
 import { setupSequelize } from '@core/shared/infra/testing/helpers';
 import { CastMemberModel } from '../cast-member.model';
 import { CastMemberModelMapper } from '../cast-member-model-mapper';
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
-import { EntityValidationError } from '@core/shared/domain/validators/validation-error';
+import { LoadEntityError } from '@core/shared/domain/validators/validation.error';
 import {
   CastMember,
   CastMemberId,
 } from '@core/cast-member/domain/cast-member.aggregate';
+import {
+  CastMemberType,
+  CastMemberTypes,
+} from '@core/cast-member/domain/cast-member-type.vo';
 
 describe('CastMemberSequelizeRepository Integration Tests', () => {
   setupSequelize({
@@ -18,16 +21,16 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
     const model = CastMemberModel.build({
       cast_member_id: '123e4567-e89b-12d3-a456-426655440000',
       name: 't'.repeat(256),
-      type: CastMemberType.ACTOR,
+      type: CastMemberTypes.ACTOR,
     });
     try {
       CastMemberModelMapper.toEntity(model);
       fail(
-        'The cast member is invalid, but it needs to throw a EntityValidationError',
+        'The cast member is invalid, but it needs to throw a LoadEntityError',
       );
     } catch (e) {
-      expect(e).toBeInstanceOf(EntityValidationError);
-      expect((e as EntityValidationError).errors).toMatchObject([
+      expect(e).toBeInstanceOf(LoadEntityError);
+      expect((e as LoadEntityError).errors).toMatchObject([
         {
           name: ['name must be shorter than or equal to 255 characters'],
         },
@@ -40,7 +43,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
     const model = CastMemberModel.build({
       cast_member_id: '123e4567-e89b-12d3-a456-426655440000',
       name: 'Actor',
-      type: CastMemberType.ACTOR,
+      type: CastMemberTypes.ACTOR,
       created_at,
     });
 
@@ -51,7 +54,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
           '123e4567-e89b-12d3-a456-426655440000',
         ),
         name: 'Actor',
-        type: CastMemberType.ACTOR,
+        type: CastMemberType.createAnActor(),
         created_at,
       }).toJSON(),
     );
@@ -62,14 +65,14 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
     const entity = new CastMember({
       cast_member_id: new CastMemberId('123e4567-e89b-12d3-a456-426655440000'),
       name: 'Actor',
-      type: CastMemberType.ACTOR,
+      type: CastMemberType.createAnActor(),
       created_at,
     });
     const model = CastMemberModelMapper.toModel(entity);
     expect(model.toJSON()).toStrictEqual({
       cast_member_id: '123e4567-e89b-12d3-a456-426655440000',
       name: 'Actor',
-      type: CastMemberType.ACTOR,
+      type: CastMemberTypes.ACTOR,
       created_at,
     });
   });

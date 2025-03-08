@@ -10,7 +10,8 @@ import {
   CastMemberId,
 } from '@core/cast-member/domain/cast-member.aggregate';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
-import { EntityValidationError } from '@core/shared/domain/validators/validation-error';
+import { EntityValidationError } from '@core/shared/domain/validators/validation.error';
+import { CastMemberType } from '@core/cast-member/domain/cast-member-type.vo';
 
 export class UpdateCastMemberUseCase
   implements IUseCase<UpdateCastMemberInput, UpdateCastMemberOutput>
@@ -27,7 +28,16 @@ export class UpdateCastMemberUseCase
 
     input.name && castMember.changeName(input.name);
 
-    input.type && castMember.changeType(input.type);
+    if (input.type) {
+      const [type, errorCastMemberType] = CastMemberType.create(
+        input.type,
+      ).asArray();
+
+      castMember.changeType(type);
+
+      errorCastMemberType &&
+        castMember.notification.setError(errorCastMemberType.message, 'type');
+    }
 
     if (castMember.notification.hasErrors()) {
       throw new EntityValidationError(castMember.notification.toJSON());

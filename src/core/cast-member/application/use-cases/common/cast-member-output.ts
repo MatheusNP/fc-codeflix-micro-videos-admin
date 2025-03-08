@@ -1,10 +1,10 @@
+import { CastMemberTypes } from '@core/cast-member/domain/cast-member-type.vo';
 import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
 
 export type CastMemberOutput = {
   id: string;
   name: string;
-  type: CastMemberType;
+  type: CastMemberTypes;
   created_at: Date;
 };
 export class CastMemberOutputMapper {

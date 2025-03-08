@@ -1,4 +1,4 @@
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
+import { CastMemberTypes } from '@core/cast-member/domain/cast-member-type.vo';
 import {
   Column,
   DataType,
@@ -10,7 +10,7 @@ import {
 export type CastMemberModelProps = {
   cast_member_id: string;
   name: string;
-  type: CastMemberType;
+  type: CastMemberTypes;
   created_at: Date;
 };
 
@@ -24,7 +24,7 @@ export class CastMemberModel extends Model<CastMemberModelProps> {
   declare name: string;
 
   @Column({ allowNull: false, type: DataType.SMALLINT })
-  declare type: CastMemberType;
+  declare type: CastMemberTypes;
 
   @Column({ allowNull: false, type: DataType.DATE(3) })
   declare created_at: Date;

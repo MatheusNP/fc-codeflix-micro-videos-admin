@@ -1,24 +1,24 @@
 import {
-  SearchParams,
+  SearchParams as DefaultSearchParams,
   SearchParamsConstructorProps,
 } from '@core/shared/domain/repository/search-params';
-import { SearchResult } from '@core/shared/domain/repository/search-result';
-import { ISearchableRepository } from '@core/shared/domain/repository/repository-interface';
-import { CastMember, CastMemberId } from './cast-member.aggregate';
 import {
   CastMemberType,
   CastMemberTypes,
   InvalidCastMemberTypeError,
 } from './cast-member-type.vo';
 import { Either } from '@core/shared/domain/either';
-import { SearchValidationError } from '@core/shared/domain/validators/validation-error';
+import { SearchValidationError } from '@core/shared/domain/validators/validation.error';
+import { CastMember, CastMemberId } from './cast-member.aggregate';
+import { ISearchableRepository } from '@core/shared/domain/repository/repository-interface';
+import { SearchResult as DefaultSearchResult } from '@core/shared/domain/repository/search-result';
 
 export type CastMemberFilter = {
   name?: string;
   type?: CastMemberType;
 };
 
-export class CastMemberSearchParams extends SearchParams<CastMemberFilter> {
+export class CastMemberSearchParams extends DefaultSearchParams<CastMemberFilter> {
   private constructor(
     props: SearchParamsConstructorProps<CastMemberFilter> = {},
   ) {
@@ -44,7 +44,6 @@ export class CastMemberSearchParams extends SearchParams<CastMemberFilter> {
       const error = new SearchValidationError([
         { type: [errorCastMemberType.message] },
       ]);
-
       throw error;
     }
 
@@ -52,7 +51,7 @@ export class CastMemberSearchParams extends SearchParams<CastMemberFilter> {
       ...props,
       filter: {
         name: props.filter?.name,
-        type,
+        type: type,
       },
     });
   }
@@ -68,7 +67,7 @@ export class CastMemberSearchParams extends SearchParams<CastMemberFilter> {
         : value;
 
     const filter = {
-      ...(_value.name && { name: `${_value.name}` }),
+      ...(_value.name && { name: `${_value?.name}` }),
       ...(_value.type && { type: _value.type }),
     };
 
@@ -76,7 +75,7 @@ export class CastMemberSearchParams extends SearchParams<CastMemberFilter> {
   }
 }
 
-export class CastMemberSearchResult extends SearchResult<CastMember> {}
+export class CastMemberSearchResult extends DefaultSearchResult<CastMember> {}
 
 export interface ICastMemberRepository
   extends ISearchableRepository<

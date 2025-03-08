@@ -1,6 +1,7 @@
-import { CastMemberType } from '@core/cast-member/domain/cast-member.type';
+import { CastMemberTypes } from '@core/cast-member/domain/cast-member-type.vo';
 import {
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -10,7 +11,7 @@ import {
 type UpdateCastMemberInputConstructorProps = {
   id: string;
   name?: string;
-  type?: CastMemberType;
+  type?: CastMemberTypes;
 };
 
 export class UpdateCastMemberInput {
@@ -22,9 +23,9 @@ export class UpdateCastMemberInput {
   @IsOptional()
   name?: string;
 
-  @IsEnum(CastMemberType)
+  @IsInt()
   @IsOptional()
-  type?: CastMemberType;
+  type?: CastMemberTypes;
 
   constructor(props: UpdateCastMemberInputConstructorProps) {
     if (!props) return;
