@@ -82,7 +82,7 @@ describe('DeleteCastMemberUseCase Integration Tests', () => {
       expect(output).toStrictEqual(expected);
 
       const castMember = await repository.findById(new CastMemberId(input.id));
-      expect(CastMemberOutputMapper.toOutput(castMember)).toStrictEqual(
+      expect(CastMemberOutputMapper.toOutput(castMember!)).toStrictEqual(
         expected,
       );
     }

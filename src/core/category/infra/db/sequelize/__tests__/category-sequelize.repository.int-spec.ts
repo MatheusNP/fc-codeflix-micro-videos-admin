@@ -25,7 +25,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     await repository.insert(category);
 
     const entity = await repository.findById(category.category_id);
-    expect(entity.toJSON()).toStrictEqual(category.toJSON());
+    expect(entity!.toJSON()).toStrictEqual(category.toJSON());
   });
 
   it('should find an entity by id', async () => {
@@ -35,7 +35,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     const category = Category.fake().aCategory().build();
     await repository.insert(category);
     entityFound = await repository.findById(category.category_id);
-    expect(entityFound.toJSON()).toStrictEqual(category.toJSON());
+    expect(entityFound!.toJSON()).toStrictEqual(category.toJSON());
   });
 
   it('should find all entities', async () => {
@@ -63,7 +63,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     await repository.update(category);
 
     const entityFound = await repository.findById(category.category_id);
-    expect(entityFound.toJSON()).toStrictEqual(category.toJSON());
+    expect(entityFound!.toJSON()).toStrictEqual(category.toJSON());
   });
 
   it('should throw error on delete when entity not found', async () => {
@@ -77,7 +77,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     const category = Category.fake().aCategory().build();
     await repository.insert(category);
     let entityFound = await repository.findById(category.category_id);
-    expect(entityFound.toJSON()).toStrictEqual(category.toJSON());
+    expect(entityFound!.toJSON()).toStrictEqual(category.toJSON());
 
     await repository.delete(category.category_id);
     entityFound = await repository.findById(category.category_id);

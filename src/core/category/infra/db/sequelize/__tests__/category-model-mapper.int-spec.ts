@@ -11,6 +11,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
 
   it('should throws error when category is invalid', () => {
     expect.assertions(2);
+    // @ts-expect-error - this is an invalid category
     const model = CategoryModel.build({
       category_id: '123e4567-e89b-12d3-a456-426655440000',
       name: 't'.repeat(256),

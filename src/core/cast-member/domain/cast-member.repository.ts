@@ -14,8 +14,8 @@ import { ISearchableRepository } from '@core/shared/domain/repository/repository
 import { SearchResult as DefaultSearchResult } from '@core/shared/domain/repository/search-result';
 
 export type CastMemberFilter = {
-  name?: string;
-  type?: CastMemberType;
+  name?: string | null;
+  type?: CastMemberType | null;
 };
 
 export class CastMemberSearchParams extends DefaultSearchParams<CastMemberFilter> {
@@ -28,8 +28,8 @@ export class CastMemberSearchParams extends DefaultSearchParams<CastMemberFilter
   static create(
     props: Omit<SearchParamsConstructorProps<CastMemberFilter>, 'filter'> & {
       filter?: {
-        name?: string;
-        type?: CastMemberTypes;
+        name?: string | null;
+        type?: CastMemberTypes | null;
       };
     } = {},
   ) {
@@ -51,7 +51,7 @@ export class CastMemberSearchParams extends DefaultSearchParams<CastMemberFilter
       ...props,
       filter: {
         name: props.filter?.name,
-        type: type,
+        type: type!,
       },
     });
   }
@@ -67,8 +67,8 @@ export class CastMemberSearchParams extends DefaultSearchParams<CastMemberFilter
         : value;
 
     const filter = {
-      ...(_value.name && { name: `${_value?.name}` }),
-      ...(_value.type && { type: _value.type }),
+      ...(_value!.name && { name: `${_value!.name}` }),
+      ...(_value!.type && { type: _value!.type }),
     };
 
     this._filter = Object.keys(filter).length === 0 ? null : filter;

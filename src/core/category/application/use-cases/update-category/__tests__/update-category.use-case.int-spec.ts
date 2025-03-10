@@ -43,13 +43,13 @@ describe('CreateCategoryUseCase Integration Tests', () => {
       input: {
         id: string;
         name?: string;
-        description?: string;
+        description?: string | null;
         is_active?: boolean;
       };
       expected: {
         id: string;
         name: string;
-        description: string;
+        description: string | null;
         is_active: boolean;
         created_at: Date;
       };
@@ -118,7 +118,7 @@ describe('CreateCategoryUseCase Integration Tests', () => {
         is_active: i.expected.is_active,
         created_at: i.expected.created_at,
       });
-      expect(entityUpdated.toJSON()).toStrictEqual({
+      expect(entityUpdated!.toJSON()).toStrictEqual({
         category_id: entity.category_id.id,
         name: i.expected.name,
         description: i.expected.description,

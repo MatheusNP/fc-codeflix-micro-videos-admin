@@ -22,6 +22,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
       cast_member_id: '123e4567-e89b-12d3-a456-426655440000',
       name: 't'.repeat(256),
       type: CastMemberTypes.ACTOR,
+      created_at: new Date(),
     });
     try {
       CastMemberModelMapper.toEntity(model);

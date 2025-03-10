@@ -109,7 +109,7 @@ describe('CastMembersController (e2e)', () => {
               castMember.cast_member_id,
             );
             const presenter = CastMembersController.serialize(
-              CastMemberOutputMapper.toOutput(castMemberUpdated),
+              CastMemberOutputMapper.toOutput(castMemberUpdated!),
             );
             const serialized = instanceToPlain(presenter);
 

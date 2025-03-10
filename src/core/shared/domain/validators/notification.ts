@@ -16,7 +16,7 @@ export class Notification {
       this.errors.set(field, Array.isArray(error) ? error : [error]);
     } else {
       if (Array.isArray(error)) {
-        error.forEach((e) => this.errors.set(e, field));
+        error.forEach((e) => this.errors.set(e, field!));
         return;
       }
       this.errors.set(error, error);

@@ -64,12 +64,12 @@ describe('CastMembersController Integration Tests', () => {
         const entity = await repository.findById(
           new CastMemberId(presenter.id),
         );
-        expect(entity.toJSON()).toStrictEqual({
+        expect(entity!.toJSON()).toStrictEqual({
           cast_member_id: presenter.id,
           created_at: presenter.created_at,
           ...expected,
         });
-        const output = CastMemberOutputMapper.toOutput(entity);
+        const output = CastMemberOutputMapper.toOutput(entity!);
         expect(presenter).toEqual(new CastMemberPresenter(output));
       },
     );
@@ -94,13 +94,13 @@ describe('CastMembersController Integration Tests', () => {
         const entity = await repository.findById(
           new CastMemberId(presenter.id),
         );
-        expect(entity.toJSON()).toStrictEqual({
+        expect(entity!.toJSON()).toStrictEqual({
           cast_member_id: presenter.id,
           created_at: presenter.created_at,
           name: expected.name ?? castMember.name,
           type: expected.type ?? castMember.type,
         });
-        const output = CastMemberOutputMapper.toOutput(entity);
+        const output = CastMemberOutputMapper.toOutput(entity!);
         expect(presenter).toEqual(new CastMemberPresenter(output));
       },
     );

@@ -53,7 +53,7 @@ export class CastMember extends AggregateRoot {
 
   validate(fields?: string[]) {
     const validator = CastMemberValidatorFactory.create();
-    return validator.validate(this.notification, this, fields);
+    return validator.validate(this.notification, this, fields!);
   }
 
   static fake() {

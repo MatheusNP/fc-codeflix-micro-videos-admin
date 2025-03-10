@@ -109,7 +109,7 @@ describe('CategoriesController (e2e)', () => {
               category.category_id,
             );
             const presenter = CategoriesController.serialize(
-              CategoryOutputMapper.toOutput(categoryUpdated),
+              CategoryOutputMapper.toOutput(categoryUpdated!),
             );
             const serialized = instanceToPlain(presenter);
 
