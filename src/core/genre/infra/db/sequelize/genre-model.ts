@@ -13,6 +13,8 @@ import {
 export type GenreModelProps = {
   genre_id: string;
   name: string;
+  categories_id?: GenreCategoryModel[];
+  categories?: CategoryModel[];
   is_active: boolean;
   created_at: Date;
 };
