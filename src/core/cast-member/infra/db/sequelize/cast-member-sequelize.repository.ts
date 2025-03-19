@@ -72,6 +72,15 @@ export class CastMemberSequelizeRepository implements ICastMemberRepository {
     return models.map((model) => CastMemberModelMapper.toEntity(model));
   }
 
+  async findByIds(entities_id: CastMemberId[]): Promise<CastMember[]> {
+    throw new Error('Method not implemented.');
+  }
+  async existsByIds(
+    entities_id: CastMemberId[],
+  ): Promise<{ exists: CastMemberId[]; not_exists: CastMemberId[] }> {
+    throw new Error('Method not implemented.');
+  }
+
   async search(props: CastMemberSearchParams): Promise<CastMemberSearchResult> {
     const offset = (props.page - 1) * props.per_page;
     const limit = props.per_page;

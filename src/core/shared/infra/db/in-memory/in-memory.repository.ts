@@ -55,6 +55,15 @@ export abstract class InMemoryRepository<
     return this.items;
   }
 
+  async findByIds(entities_id: EntityId[]): Promise<E[]> {
+    throw new Error('Method not implemented.');
+  }
+  async existsByIds(
+    entities_id: EntityId[],
+  ): Promise<{ exists: EntityId[]; not_exists: EntityId[] }> {
+    throw new Error('Method not implemented.');
+  }
+
   abstract getEntity(): new (...args: any[]) => E;
 }
 
