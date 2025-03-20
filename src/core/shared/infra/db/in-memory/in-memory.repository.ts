@@ -1,3 +1,4 @@
+import { InvalidArgumentError } from '@core/shared/domain/errors/invalid-argument.error';
 import { Entity } from '../../../domain/entity';
 import { NotFoundError } from '../../../domain/errors/not-found.error';
 import {
@@ -56,12 +57,36 @@ export abstract class InMemoryRepository<
   }
 
   async findByIds(entities_id: EntityId[]): Promise<E[]> {
-    throw new Error('Method not implemented.');
+    return this.items.filter((entity) => {
+      return entities_id.some((id) => entity.entity_id.equals(id));
+    });
   }
+
   async existsByIds(
     entities_id: EntityId[],
   ): Promise<{ exists: EntityId[]; not_exists: EntityId[] }> {
-    throw new Error('Method not implemented.');
+    if (!entities_id.length) {
+      throw new InvalidArgumentError(
+        'ids must be an array with at least one element',
+      );
+    }
+
+    if (this.items.length === 0) {
+      return { exists: [], not_exists: entities_id };
+    }
+
+    const existsId = new Set<EntityId>();
+    const notExistsId = new Set<EntityId>();
+
+    entities_id.forEach((id) => {
+      const item = this.items.find((entity) => entity.entity_id.equals(id));
+      item ? existsId.add(id) : notExistsId.add(id);
+    });
+
+    return {
+      exists: Array.from(existsId.values()),
+      not_exists: Array.from(notExistsId.values()),
+    };
   }
 
   abstract getEntity(): new (...args: any[]) => E;
