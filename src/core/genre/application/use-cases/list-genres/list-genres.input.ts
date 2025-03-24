@@ -3,10 +3,10 @@ import { SortDirection } from '@core/shared/domain/repository/search-params';
 import { IsArray, IsUUID, ValidateNested, validateSync } from 'class-validator';
 
 export class ListGenresFilter {
-  name?: string | null;
+  name?: string;
   @IsUUID('4', { each: true })
   @IsArray()
-  categories_id?: string[] | null;
+  categories_id?: string[];
 }
 
 export class ListGenresInput implements SearchInput<ListGenresFilter> {

@@ -45,7 +45,6 @@ describe('GenreModelMapper Integration Tests', () => {
         GenreModelMapper.toEntity(i.makeModel());
         fail('The genre is valid, but it needs to throw a LoadEntityError');
       } catch (e) {
-        console.log(JSON.stringify(e));
         expect(e).toBeInstanceOf(LoadEntityError);
         expect(e.errors).toMatchObject(i.expectedErrors);
       }

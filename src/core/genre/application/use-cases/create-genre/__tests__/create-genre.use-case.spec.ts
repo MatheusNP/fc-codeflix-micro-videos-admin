@@ -44,7 +44,6 @@ describe('CreateGenreUseCase Unit Tests', () => {
           categories_id: [categoryId1.id, categoryId2.id],
         });
       } catch (error) {
-        console.log(error);
         expect(spyValidateCategoriesId).toHaveBeenCalledWith([
           categoryId1.id,
           categoryId2.id,
