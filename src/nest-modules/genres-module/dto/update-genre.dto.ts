@@ -1,8 +1,8 @@
-import { CreateGenreInput } from '@core/genre/application/use-cases/create-genre/create-genre.input';
+import { UpdateGenreInput } from '@core/genre/application/use-cases/update-genre/update-genre.input';
 import { OmitType } from '@nestjs/mapped-types';
 
-export class UpdateGenreInputWithoutId extends OmitType(CreateGenreInput, [
+export class UpdateGenreInputWithoutId extends OmitType(UpdateGenreInput, [
   'id',
-] as any) {}
+] as const) {}
 
 export class UpdateGenreDto extends UpdateGenreInputWithoutId {}

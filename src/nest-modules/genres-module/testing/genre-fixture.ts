@@ -1,4 +1,4 @@
-import { Category } from '@core/category/domain/category.aggregate';
+import { Category, CategoryId } from '@core/category/domain/category.aggregate';
 import { Genre } from '@core/genre/domain/genre.aggregate';
 import { SortDirection } from '@core/shared/domain/repository/search-params';
 
@@ -108,7 +108,8 @@ export class CreateGenreFixture {
   }
 
   static arrangeInvalidRequest() {
-    const faker = Genre.fake().aGenre();
+    const categoryId = new CategoryId();
+    const faker = Genre.fake().aGenre().addCategoryId(categoryId);
     const defaultExpected = {
       statusCode: 422,
       error: 'Unprocessable Entity',

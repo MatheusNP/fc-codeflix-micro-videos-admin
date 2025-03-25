@@ -9,6 +9,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Inject,
   Param,
   ParseUUIDPipe,
@@ -25,16 +26,12 @@ import { GenreCollectionPresenter, GenrePresenter } from './genres.presenter';
 export class GenresController {
   @Inject(CreateGenreUseCase)
   private createUseCase: CreateGenreUseCase;
-
   @Inject(UpdateGenreUseCase)
   private updateUseCase: UpdateGenreUseCase;
-
   @Inject(ListGenresUseCase)
   private listUseCase: ListGenresUseCase;
-
   @Inject(GetGenreUseCase)
   private getUseCase: GetGenreUseCase;
-
   @Inject(DeleteGenreUseCase)
   private deleteUseCase: DeleteGenreUseCase;
 
@@ -58,6 +55,7 @@ export class GenresController {
     return GenresController.serialize(output);
   }
 
+  @HttpCode(204)
   @Delete(':id')
   async remove(
     @Param('id', new ParseUUIDPipe({ errorHttpStatusCode: 422 })) id: string,
