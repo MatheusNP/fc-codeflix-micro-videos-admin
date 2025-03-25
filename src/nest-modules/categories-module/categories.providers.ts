@@ -7,6 +7,7 @@ import { ICategoryRepository } from '@core/category/domain/category.repository';
 import { CategoryInMemoryRepository } from '@core/category/infra/db/in-memory/category-in-memory.repository';
 import { CategorySequelizeRepository } from '@core/category/infra/db/sequelize/category-sequelize.repository';
 import { CategoryModel } from '@core/category/infra/db/sequelize/category.model';
+import { CategoriesIdExistsInStorageValidator } from '@core/genre/application/validations/categories-ids-exists-in-storage.validator';
 import { getModelToken } from '@nestjs/sequelize';
 
 export const REPOSITORIES = {
@@ -59,7 +60,17 @@ export const USE_CASES = {
   },
 };
 
+export const VALIDATIONS = {
+  CATEGORIES_ID_EXISTS_IN_STORAGE_VALIDATOR: {
+    provide: CategoriesIdExistsInStorageValidator,
+    useFactory: (categoryRepo: ICategoryRepository) =>
+      new CategoriesIdExistsInStorageValidator(categoryRepo),
+    inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide],
+  },
+};
+
 export const CATEGORY_PROVIDERS = {
   REPOSITORIES,
   USE_CASES,
+  VALIDATIONS,
 };
