@@ -1,15 +1,15 @@
-import { Either } from '@core/shared/domain/either';
+import { ImageMedia } from '@core/shared/domain/value-objects/image-media.vo';
+import { VideoId } from './video.aggregate';
 import {
   InvalidMediaFileSizeError,
   InvalidMediaMimeTypeError,
   MediaFilerValidator,
 } from '@core/shared/domain/validators/media-file.validator';
-import { ImageMedia } from '@core/shared/domain/value-objects/image-media.vo';
-import { VideoId } from './video.aggregate';
+import { Either } from '@core/shared/domain/either';
 
-export class Banner extends ImageMedia {
+export class ThumbnailHalf extends ImageMedia {
   static max_size = 1024 * 1024 * 2;
-  static mime_types = ['image/jpeg', 'image/png', 'image/gif'];
+  static mime_types = ['image/jpeg', 'image/png'];
 
   static createFromFile({
     raw_name,
@@ -23,12 +23,12 @@ export class Banner extends ImageMedia {
     video_id: VideoId;
   }) {
     const mediaFileValidator = new MediaFilerValidator(
-      Banner.max_size,
-      Banner.mime_types,
+      ThumbnailHalf.max_size,
+      ThumbnailHalf.mime_types,
     );
 
     return Either.safe<
-      Banner,
+      ThumbnailHalf,
       InvalidMediaFileSizeError | InvalidMediaMimeTypeError
     >(() => {
       const { name } = mediaFileValidator.validate({
@@ -37,8 +37,8 @@ export class Banner extends ImageMedia {
         size,
       });
 
-      return new Banner({
-        name,
+      return new ThumbnailHalf({
+        name: `${video_id.id}-${name}`,
         location: `videos/${video_id.id}/images`,
       });
     });
