@@ -10,6 +10,7 @@ import { Thumbnail } from './thumbnail.vo';
 import { Trailer } from './trailer.vo';
 import { VideoMedia } from './video-media.vo';
 import VideoValidatorFactory from './video.validator';
+import { AudioVideoMediaStatus } from '@core/shared/domain/value-objects/audio-video-media.vo';
 
 export type VideoConstructorProps = {
   video_id?: VideoId;
@@ -100,6 +101,7 @@ export class Video extends AggregateRoot {
     });
 
     video.validate(['title']);
+    video.markAsPublished();
 
     return video;
   }
@@ -131,6 +133,39 @@ export class Video extends AggregateRoot {
 
   markAsNotOpened() {
     this.is_opened = false;
+  }
+
+  replaceBanner(banner: Banner) {
+    this.banner = banner;
+  }
+
+  replaceThumbnail(thumbnail: Thumbnail) {
+    this.thumbnail = thumbnail;
+  }
+
+  replaceThumbnailHalf(thumbnailHalf: ThumbnailHalf) {
+    this.thumbnail_half = thumbnailHalf;
+  }
+
+  replaceTrailer(trailer: Trailer) {
+    this.trailer = trailer;
+    this.markAsPublished();
+  }
+
+  replaceVideo(video: VideoMedia) {
+    this.video = video;
+    this.markAsPublished();
+  }
+
+  private markAsPublished() {
+    if (
+      this.trailer &&
+      this.video &&
+      this.trailer.status === AudioVideoMediaStatus.COMPLETED &&
+      this.video.status === AudioVideoMediaStatus.COMPLETED
+    ) {
+      this.is_published = true;
+    }
   }
 
   addCategory(categoryId: CategoryId) {
