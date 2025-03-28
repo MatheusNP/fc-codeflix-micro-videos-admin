@@ -1,11 +1,11 @@
 import {
   InvalidMediaFileSizeError,
   InvalidMediaMimeTypeError,
-  MediaFilerValidator,
+  MediaFileValidator,
 } from '../media-file.validator';
 
 describe('MediaFileValidator Unit Tests', () => {
-  const validator = new MediaFilerValidator(1024 * 1024, [
+  const validator = new MediaFileValidator(1024 * 1024, [
     'image/jpeg',
     'image/png',
   ]);

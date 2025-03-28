@@ -3,7 +3,7 @@ import { VideoId } from './video.aggregate';
 import {
   InvalidMediaFileSizeError,
   InvalidMediaMimeTypeError,
-  MediaFilerValidator,
+  MediaFileValidator,
 } from '@core/shared/domain/validators/media-file.validator';
 import { Either } from '@core/shared/domain/either';
 
@@ -22,7 +22,7 @@ export class ThumbnailHalf extends ImageMedia {
     size: number;
     video_id: VideoId;
   }) {
-    const mediaFileValidator = new MediaFilerValidator(
+    const mediaFileValidator = new MediaFileValidator(
       ThumbnailHalf.max_size,
       ThumbnailHalf.mime_types,
     );

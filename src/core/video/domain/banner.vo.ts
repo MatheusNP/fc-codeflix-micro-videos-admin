@@ -2,7 +2,7 @@ import { Either } from '@core/shared/domain/either';
 import {
   InvalidMediaFileSizeError,
   InvalidMediaMimeTypeError,
-  MediaFilerValidator,
+  MediaFileValidator,
 } from '@core/shared/domain/validators/media-file.validator';
 import { ImageMedia } from '@core/shared/domain/value-objects/image-media.vo';
 import { VideoId } from './video.aggregate';
@@ -22,7 +22,7 @@ export class Banner extends ImageMedia {
     size: number;
     video_id: VideoId;
   }) {
-    const mediaFileValidator = new MediaFilerValidator(
+    const mediaFileValidator = new MediaFileValidator(
       Banner.max_size,
       Banner.mime_types,
     );

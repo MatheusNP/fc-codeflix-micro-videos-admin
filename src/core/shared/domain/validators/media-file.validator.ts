@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-export class MediaFilerValidator {
+export class MediaFileValidator {
   constructor(
     private readonly max_size: number,
     private readonly valid_mime_types: string[],
