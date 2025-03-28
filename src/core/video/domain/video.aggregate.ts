@@ -9,6 +9,7 @@ import { ThumbnailHalf } from './thumbnail-half.vo';
 import { Thumbnail } from './thumbnail.vo';
 import { Trailer } from './trailer.vo';
 import { VideoMedia } from './video-media.vo';
+import VideoValidatorFactory from './video.validator';
 
 export type VideoConstructorProps = {
   video_id?: VideoId;
@@ -98,14 +99,14 @@ export class Video extends AggregateRoot {
       is_published: false,
     });
 
-    // video.validate()
+    video.validate(['title']);
 
     return video;
   }
 
   changeTitle(title: string) {
     this.title = title;
-    // this.validate()
+    this.validate(['title']);
   }
 
   changeDescription(description: string) {
@@ -187,6 +188,11 @@ export class Video extends AggregateRoot {
         cast_member_id,
       ]),
     );
+  }
+
+  validate(fields?: string[]) {
+    const validator = VideoValidatorFactory.create();
+    return validator.validate(this.notification, this, fields);
   }
 
   get entity_id() {
