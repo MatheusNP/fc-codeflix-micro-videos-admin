@@ -2,15 +2,17 @@ import { CastMemberId } from '@core/cast-member/domain/cast-member.aggregate';
 import { CategoryId } from '@core/category/domain/category.aggregate';
 import { GenreId } from '@core/genre/domain/genre.aggregate';
 import { AggregateRoot } from '@core/shared/domain/aggregate-root';
+import { AudioVideoMediaStatus } from '@core/shared/domain/value-objects/audio-video-media.vo';
 import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
-import { Rating } from './rating.vo';
 import { Banner } from './banner.vo';
+import { VideoAudioMediaReplacedEvent } from './domain-events/video-audio-media-replaced.event';
+import { VideoCreatedEvent } from './domain-events/video-created.event';
+import { Rating } from './rating.vo';
 import { ThumbnailHalf } from './thumbnail-half.vo';
 import { Thumbnail } from './thumbnail.vo';
 import { Trailer } from './trailer.vo';
 import { VideoMedia } from './video-media.vo';
 import VideoValidatorFactory from './video.validator';
-import { AudioVideoMediaStatus } from '@core/shared/domain/value-objects/audio-video-media.vo';
 
 export type VideoConstructorProps = {
   video_id?: VideoId;
@@ -89,6 +91,15 @@ export class Video extends AggregateRoot {
     this.genres_id = props.genres_id;
     this.cast_members_id = props.cast_members_id;
     this.created_at = props.created_at ?? new Date();
+
+    this.registerHandler(
+      VideoCreatedEvent.name,
+      this.onVideoCreated.bind(this),
+    );
+    this.registerHandler(
+      VideoAudioMediaReplacedEvent.name,
+      this.onVideoAudioMediaReplacedEvent.bind(this),
+    );
   }
 
   static create(props: VideoCreateCommand): Video {
@@ -101,7 +112,28 @@ export class Video extends AggregateRoot {
     });
 
     video.validate(['title']);
-    video.markAsPublished();
+    video.tryMarkAsPublished();
+    video.applyEvent(
+      new VideoCreatedEvent({
+        video_id: video.video_id,
+        title: video.title,
+        description: video.description,
+        year_launched: video.year_launched,
+        duration: video.duration,
+        rating: video.rating,
+        is_opened: video.is_opened,
+        is_published: video.is_published,
+        banner: video.banner,
+        thumbnail: video.thumbnail,
+        thumbnail_half: video.thumbnail_half,
+        trailer: video.trailer,
+        video: video.video,
+        categories_id: Array.from(video.categories_id.values()),
+        genres_id: Array.from(video.genres_id.values()),
+        cast_members_id: Array.from(video.cast_members_id.values()),
+        created_at: video.created_at,
+      }),
+    );
 
     return video;
   }
@@ -149,23 +181,24 @@ export class Video extends AggregateRoot {
 
   replaceTrailer(trailer: Trailer) {
     this.trailer = trailer;
-    this.markAsPublished();
+    this.applyEvent(
+      new VideoAudioMediaReplacedEvent({
+        aggregate_id: this.video_id,
+        media: trailer,
+        media_type: 'trailer',
+      }),
+    );
   }
 
   replaceVideo(video: VideoMedia) {
     this.video = video;
-    this.markAsPublished();
-  }
-
-  private markAsPublished() {
-    if (
-      this.trailer &&
-      this.video &&
-      this.trailer.status === AudioVideoMediaStatus.COMPLETED &&
-      this.video.status === AudioVideoMediaStatus.COMPLETED
-    ) {
-      this.is_published = true;
-    }
+    this.applyEvent(
+      new VideoAudioMediaReplacedEvent({
+        aggregate_id: this.video_id,
+        media: video,
+        media_type: 'video',
+      }),
+    );
   }
 
   addCategory(categoryId: CategoryId) {
@@ -223,6 +256,33 @@ export class Video extends AggregateRoot {
         cast_member_id,
       ]),
     );
+  }
+
+  onVideoCreated(event: VideoCreatedEvent) {
+    if (this.is_published) {
+      return;
+    }
+
+    this.tryMarkAsPublished();
+  }
+
+  onVideoAudioMediaReplacedEvent(event: VideoAudioMediaReplacedEvent) {
+    if (this.is_published) {
+      return;
+    }
+
+    this.tryMarkAsPublished();
+  }
+
+  private tryMarkAsPublished() {
+    if (
+      this.trailer &&
+      this.video &&
+      this.trailer.status === AudioVideoMediaStatus.COMPLETED &&
+      this.video.status === AudioVideoMediaStatus.COMPLETED
+    ) {
+      this.is_published = true;
+    }
   }
 
   validate(fields?: string[]) {
