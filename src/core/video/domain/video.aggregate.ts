@@ -11,6 +11,7 @@ import { Rating } from './rating.vo';
 import { ThumbnailHalf } from './thumbnail-half.vo';
 import { Thumbnail } from './thumbnail.vo';
 import { Trailer } from './trailer.vo';
+import { VideoFakeBuilder } from './video-fake.builder';
 import { VideoMedia } from './video-media.vo';
 import VideoValidatorFactory from './video.validator';
 
@@ -112,7 +113,6 @@ export class Video extends AggregateRoot {
     });
 
     video.validate(['title']);
-    video.tryMarkAsPublished();
     video.applyEvent(
       new VideoCreatedEvent({
         video_id: video.video_id,
@@ -136,6 +136,10 @@ export class Video extends AggregateRoot {
     );
 
     return video;
+  }
+
+  static fake() {
+    return VideoFakeBuilder;
   }
 
   changeTitle(title: string) {
