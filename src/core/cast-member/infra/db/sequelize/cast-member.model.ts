@@ -26,6 +26,6 @@ export class CastMemberModel extends Model<CastMemberModelProps> {
   @Column({ allowNull: false, type: DataType.SMALLINT })
   declare type: CastMemberTypes;
 
-  @Column({ allowNull: false, type: DataType.DATE(3) })
+  @Column({ allowNull: false, type: DataType.DATE(6) })
   declare created_at: Date;
 }

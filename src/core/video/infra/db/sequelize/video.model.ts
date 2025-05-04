@@ -12,6 +12,8 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { AudioVideoMediaModel } from './audio-video-media.model';
+import { ImageMediaModel } from './image-media.model';
 
 export type VideoModelProps = {
   video_id: string;
@@ -22,13 +24,15 @@ export type VideoModelProps = {
   rating: RatingValues;
   is_opened: boolean;
   is_published: boolean;
+  image_medias: ImageMediaModel[];
+  audio_video_medias: AudioVideoMediaModel[];
   categories_id: VideoCategoryModel[];
-  categories: CategoryModel[];
+  categories?: CategoryModel[];
   genres_id: VideoGenreModel[];
-  genres: GenreModel[];
+  genres?: GenreModel[];
   cast_members_id: VideoCastMemberModel[];
-  cast_members: CastMemberModel[];
-  updated_at: Date;
+  cast_members?: CastMemberModel[];
+  created_at: Date;
 };
 
 @Table({ tableName: 'videos', timestamps: false })
@@ -68,6 +72,12 @@ export class VideoModel extends Model<VideoModelProps> {
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   declare is_published: boolean;
 
+  @HasMany(() => ImageMediaModel, 'video_id')
+  declare image_medias: ImageMediaModel[];
+
+  @HasMany(() => AudioVideoMediaModel, 'video_id')
+  declare audio_video_medias: AudioVideoMediaModel[];
+
   @HasMany(() => VideoCategoryModel, 'video_id')
   declare categories_id: VideoCategoryModel[];
 
@@ -86,7 +96,7 @@ export class VideoModel extends Model<VideoModelProps> {
   @BelongsToMany(() => CastMemberModel, () => VideoCastMemberModel)
   declare cast_members: CastMemberModel[];
 
-  @Column({ type: DataType.DATE, allowNull: false })
+  @Column({ type: DataType.DATE(6), allowNull: false })
   declare created_at: Date;
 }
 

@@ -1,6 +1,6 @@
 import { setupSequelize } from '@core/shared/infra/testing/helpers';
-import { CastMemberModel } from '../cast-member.model';
 import { DataType } from 'sequelize-typescript';
+import { CastMemberModel } from '../cast-member.model';
 
 describe('CastMemberModel Integration Tests', () => {
   setupSequelize({
@@ -40,7 +40,7 @@ describe('CastMemberModel Integration Tests', () => {
     });
 
     expect(attributesMap.created_at).toMatchObject({
-      type: DataType.DATE(3),
+      type: DataType.DATE(6),
       allowNull: false,
       field: 'created_at',
       fieldName: 'created_at',

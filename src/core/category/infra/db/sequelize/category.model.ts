@@ -29,6 +29,6 @@ export class CategoryModel extends Model<CategoryModelProps> {
   @Column({ allowNull: false, type: DataType.BOOLEAN })
   declare is_active: boolean;
 
-  @Column({ allowNull: false, type: DataType.DATE(3) })
+  @Column({ allowNull: false, type: DataType.DATE(6) })
   declare created_at: Date;
 }

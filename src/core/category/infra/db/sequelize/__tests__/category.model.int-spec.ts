@@ -1,6 +1,6 @@
 import { DataType } from 'sequelize-typescript';
-import { CategoryModel } from '../category.model';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
+import { CategoryModel } from '../category.model';
 
 describe('CategoryModel Integration Tests', () => {
   setupSequelize({
@@ -48,7 +48,7 @@ describe('CategoryModel Integration Tests', () => {
     });
 
     expect(attributesMap.created_at).toMatchObject({
-      type: DataType.DATE(3),
+      type: DataType.DATE(6),
       allowNull: false,
       field: 'created_at',
       fieldName: 'created_at',
