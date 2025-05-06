@@ -555,7 +555,7 @@ describe('VideoSequelizeRepository Integration Tests', () => {
           .build();
         await uow.start();
         await videoRepo.insert(video);
-        const existsResult = await videoRepo.existsById([video.video_id]);
+        const existsResult = await videoRepo.existsByIds([video.video_id]);
         expect(existsResult.exists[0]).toBeValueObject(video.video_id);
         await uow.commit();
       });

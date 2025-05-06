@@ -1,23 +1,23 @@
-import { GenreInMemoryRepository } from '@core/genre/infra/db/in-memory/genre-in-memory.repository';
-import { CreateGenreUseCase } from '../create-genre.use-case';
-import { CategoryInMemoryRepository } from '@core/category/infra/db/in-memory/category-in-memory.repository';
-import { CategoriesIdExistsInStorageValidator } from '@core/genre/application/validations/categories-ids-exists-in-storage.validator';
-import { UnitOfWorkFakeInMemory } from '@core/shared/infra/db/in-memory/fake-unit-of-work-in-memory';
-import { EntityValidationError } from '@core/shared/domain/validators/validation.error';
+import { CategoriesIdExistsInDatabaseValidator } from '@core/category/application/validations/categories-ids-exists-in-database.validator';
 import { Category, CategoryId } from '@core/category/domain/category.aggregate';
+import { CategoryInMemoryRepository } from '@core/category/infra/db/in-memory/category-in-memory.repository';
+import { GenreInMemoryRepository } from '@core/genre/infra/db/in-memory/genre-in-memory.repository';
+import { EntityValidationError } from '@core/shared/domain/validators/validation.error';
+import { UnitOfWorkFakeInMemory } from '@core/shared/infra/db/in-memory/fake-unit-of-work-in-memory';
+import { CreateGenreUseCase } from '../create-genre.use-case';
 
 describe('CreateGenreUseCase Unit Tests', () => {
   let useCase: CreateGenreUseCase;
   let genreRepo: GenreInMemoryRepository;
   let categoryRepo: CategoryInMemoryRepository;
-  let categoriesIdValidator: CategoriesIdExistsInStorageValidator;
+  let categoriesIdValidator: CategoriesIdExistsInDatabaseValidator;
   let uow: UnitOfWorkFakeInMemory;
 
   beforeEach(() => {
     uow = new UnitOfWorkFakeInMemory();
     genreRepo = new GenreInMemoryRepository();
     categoryRepo = new CategoryInMemoryRepository();
-    categoriesIdValidator = new CategoriesIdExistsInStorageValidator(
+    categoriesIdValidator = new CategoriesIdExistsInDatabaseValidator(
       categoryRepo,
     );
     useCase = new CreateGenreUseCase(

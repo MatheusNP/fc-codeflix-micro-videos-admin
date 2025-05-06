@@ -3,18 +3,18 @@ import { ICategoryRepository } from '@core/category/domain/category.repository';
 import { Either } from '@core/shared/domain/either';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
 
-export class CategoriesIdExistsInStorageValidator {
+export class CategoriesIdExistsInDatabaseValidator {
   constructor(private categoryRepo: ICategoryRepository) {}
 
   async validate(
     categories_id: string[],
   ): Promise<Either<CategoryId[], NotFoundError[]>> {
-    const categoriesId = categories_id.map((id) => new CategoryId(id));
-    const result = await this.categoryRepo.existsByIds(categoriesId);
+    const categoriesId = categories_id.map((v) => new CategoryId(v));
 
-    return result.not_exists.length > 0
+    const existsResult = await this.categoryRepo.existsByIds(categoriesId);
+    return existsResult.not_exists.length > 0
       ? Either.fail(
-          result.not_exists.map((c) => new NotFoundError(c.id, Category)),
+          existsResult.not_exists.map((c) => new NotFoundError(c.id, Category)),
         )
       : Either.ok(categoriesId);
   }

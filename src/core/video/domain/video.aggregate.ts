@@ -305,7 +305,7 @@ export class Video extends AggregateRoot {
       description: this.description,
       year_launched: this.year_launched,
       duration: this.duration,
-      rating: this.rating,
+      rating: this.rating.value,
       is_opened: this.is_opened,
       is_published: this.is_published,
       banner: this.banner ? this.banner.toJSON() : null,

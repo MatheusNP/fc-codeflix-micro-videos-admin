@@ -7,11 +7,12 @@ import {
   CastMemberSearchResult,
   ICastMemberRepository,
 } from '@core/cast-member/domain/cast-member.repository';
+import { InvalidArgumentError } from '@core/shared/domain/errors/invalid-argument.error';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
 import { SortDirection } from '@core/shared/domain/repository/search-params';
 import { literal, Op } from 'sequelize';
-import { CastMemberModel } from './cast-member.model';
 import { CastMemberModelMapper } from './cast-member-model-mapper';
+import { CastMemberModel } from './cast-member.model';
 
 export class CastMemberSequelizeRepository implements ICastMemberRepository {
   sortableFields: string[] = ['name', 'created_at'];
@@ -72,13 +73,44 @@ export class CastMemberSequelizeRepository implements ICastMemberRepository {
     return models.map((model) => CastMemberModelMapper.toEntity(model));
   }
 
-  async findByIds(entities_id: CastMemberId[]): Promise<CastMember[]> {
-    throw new Error('Method not implemented.');
+  async findByIds(ids: CastMemberId[]): Promise<CastMember[]> {
+    const models = await this.castMemberModel.findAll({
+      where: {
+        cast_member_id: {
+          [Op.in]: ids.map((id) => id.id),
+        },
+      },
+    });
+    return models.map((m) => CastMemberModelMapper.toEntity(m));
   }
+
   async existsByIds(
-    entities_id: CastMemberId[],
+    ids: CastMemberId[],
   ): Promise<{ exists: CastMemberId[]; not_exists: CastMemberId[] }> {
-    throw new Error('Method not implemented.');
+    if (!ids.length) {
+      throw new InvalidArgumentError(
+        'ids must be an array with at least one element',
+      );
+    }
+
+    const existsCastMemberModels = await this.castMemberModel.findAll({
+      attributes: ['cast_member_id'],
+      where: {
+        cast_member_id: {
+          [Op.in]: ids.map((id) => id.id),
+        },
+      },
+    });
+    const existsCastMemberIds = existsCastMemberModels.map(
+      (m) => new CastMemberId(m.cast_member_id),
+    );
+    const notExistsCastMemberIds = ids.filter(
+      (id) => !existsCastMemberIds.some((e) => e.equals(id)),
+    );
+    return {
+      exists: existsCastMemberIds,
+      not_exists: notExistsCastMemberIds,
+    };
   }
 
   async search(props: CastMemberSearchParams): Promise<CastMemberSearchResult> {

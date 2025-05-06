@@ -33,12 +33,6 @@ export class VideoSequelizeRepository implements IVideoRepository {
     private uow: UnitOfWorkSequelize,
   ) {}
 
-  existsByIds(
-    entities_id: VideoId[],
-  ): Promise<{ exists: VideoId[]; not_exists: VideoId[] }> {
-    throw new Error('Method not implemented.');
-  }
-
   async insert(entity: Video): Promise<void> {
     await this.videoModel.create(VideoModelMapper.toModelProps(entity), {
       include: this.relations_include,
@@ -82,7 +76,7 @@ export class VideoSequelizeRepository implements IVideoRepository {
     return models.map((m) => VideoModelMapper.toEntity(m));
   }
 
-  async existsById(
+  async existsByIds(
     ids: VideoId[],
   ): Promise<{ exists: VideoId[]; not_exists: VideoId[] }> {
     if (!ids.length) {

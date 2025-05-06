@@ -1,13 +1,13 @@
-import { IUseCase } from '@core/shared/application/use-case.interface';
-import { UpdateGenreInput } from './update-genre.input';
-import { GenreOutput, GenreOutputMapper } from '../common/genre-output';
-import { IUnitOfWork } from '@core/shared/domain/repository/unit-of-work.interface';
-import { IGenreRepository } from '@core/genre/domain/genre.repository';
+import { CategoriesIdExistsInDatabaseValidator } from '@core/category/application/validations/categories-ids-exists-in-database.validator';
 import { ICategoryRepository } from '@core/category/domain/category.repository';
-import { CategoriesIdExistsInStorageValidator } from '../../validations/categories-ids-exists-in-storage.validator';
 import { Genre, GenreId } from '@core/genre/domain/genre.aggregate';
+import { IGenreRepository } from '@core/genre/domain/genre.repository';
+import { IUseCase } from '@core/shared/application/use-case.interface';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
+import { IUnitOfWork } from '@core/shared/domain/repository/unit-of-work.interface';
 import { EntityValidationError } from '@core/shared/domain/validators/validation.error';
+import { GenreOutput, GenreOutputMapper } from '../common/genre-output';
+import { UpdateGenreInput } from './update-genre.input';
 
 export class UpdateGenreUseCase
   implements IUseCase<UpdateGenreInput, UpdateGenreOutput>
@@ -16,7 +16,7 @@ export class UpdateGenreUseCase
     private uow: IUnitOfWork,
     private genreRepository: IGenreRepository,
     private categoryRepository: ICategoryRepository,
-    private categoriesIdValidator: CategoriesIdExistsInStorageValidator,
+    private categoriesIdValidator: CategoriesIdExistsInDatabaseValidator,
   ) {}
 
   async execute(input: UpdateGenreInput): Promise<GenreOutput> {

@@ -1,25 +1,25 @@
-import { UnitOfWorkFakeInMemory } from '@core/shared/infra/db/in-memory/fake-unit-of-work-in-memory';
-import { UpdateGenreUseCase } from '../update-genre.use-case';
-import { GenreInMemoryRepository } from '@core/genre/infra/db/in-memory/genre-in-memory.repository';
-import { CategoryInMemoryRepository } from '@core/category/infra/db/in-memory/category-in-memory.repository';
-import { CategoriesIdExistsInStorageValidator } from '@core/genre/application/validations/categories-ids-exists-in-storage.validator';
-import { Genre } from '@core/genre/domain/genre.aggregate';
-import { UpdateGenreInput } from '../update-genre.input';
-import { EntityValidationError } from '@core/shared/domain/validators/validation.error';
+import { CategoriesIdExistsInDatabaseValidator } from '@core/category/application/validations/categories-ids-exists-in-database.validator';
 import { Category } from '@core/category/domain/category.aggregate';
+import { CategoryInMemoryRepository } from '@core/category/infra/db/in-memory/category-in-memory.repository';
+import { Genre } from '@core/genre/domain/genre.aggregate';
+import { GenreInMemoryRepository } from '@core/genre/infra/db/in-memory/genre-in-memory.repository';
+import { EntityValidationError } from '@core/shared/domain/validators/validation.error';
+import { UnitOfWorkFakeInMemory } from '@core/shared/infra/db/in-memory/fake-unit-of-work-in-memory';
+import { UpdateGenreInput } from '../update-genre.input';
+import { UpdateGenreUseCase } from '../update-genre.use-case';
 
 describe('UpdateGenreUseCase Unit Tests', () => {
   let useCase: UpdateGenreUseCase;
   let uow: UnitOfWorkFakeInMemory;
   let genreRepository: GenreInMemoryRepository;
   let categoryRepository: CategoryInMemoryRepository;
-  let categoriesIdValidator: CategoriesIdExistsInStorageValidator;
+  let categoriesIdValidator: CategoriesIdExistsInDatabaseValidator;
 
   beforeEach(() => {
     uow = new UnitOfWorkFakeInMemory();
     genreRepository = new GenreInMemoryRepository();
     categoryRepository = new CategoryInMemoryRepository();
-    categoriesIdValidator = new CategoriesIdExistsInStorageValidator(
+    categoriesIdValidator = new CategoriesIdExistsInDatabaseValidator(
       categoryRepository,
     );
     useCase = new UpdateGenreUseCase(
