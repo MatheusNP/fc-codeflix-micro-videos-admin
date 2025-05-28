@@ -22,10 +22,10 @@ import { setupSequelizeForVideo } from '@core/video/infra/db/sequelize/testing/h
 import { VideoSequelizeRepository } from '@core/video/infra/db/sequelize/video-sequelize.repository';
 import { VideoModel } from '@core/video/infra/db/sequelize/video.model';
 import { Storage as GoogleCloudStorageSdk } from '@google-cloud/storage';
-import { UploadImageMediasUseCase } from '../upload-image-medias.use-case';
+import { UploadAudioVideoMediasUseCase } from '../upload-audio-video-medias.use-case';
 
-describe('UploadImageMediasUseCase Integration Tests', () => {
-  let uploadImageMediasUseCase: UploadImageMediasUseCase;
+describe('UploadAudioVideoMediasUseCase Integration Tests', () => {
+  let uploadAudioVideoMediasUseCase: UploadAudioVideoMediasUseCase;
   let videoRepo: IVideoRepository;
   let categoryRepo: ICategoryRepository;
   let genreRepo: IGenreRepository;
@@ -45,7 +45,7 @@ describe('UploadImageMediasUseCase Integration Tests', () => {
     videoRepo = new VideoSequelizeRepository(VideoModel, uow);
     storageService = new GoogleCloudStorage(storageSdk, Config.bucketName());
 
-    uploadImageMediasUseCase = new UploadImageMediasUseCase(
+    uploadAudioVideoMediasUseCase = new UploadAudioVideoMediasUseCase(
       uow,
       videoRepo,
       storageService,
@@ -54,13 +54,13 @@ describe('UploadImageMediasUseCase Integration Tests', () => {
 
   it('should throw error when video not found', async () => {
     await expect(
-      uploadImageMediasUseCase.execute({
+      uploadAudioVideoMediasUseCase.execute({
         video_id: '4e9e2e4e-4b4a-4b4a-8b8b-8b8b8b8b8b8b',
-        field: 'banner',
+        field: 'trailer',
         file: {
-          raw_name: 'banner.jpg',
+          raw_name: 'trailer.mp4',
           data: Buffer.from(''),
-          mime_type: 'image/jpg',
+          mime_type: 'video/mp4',
           size: 100,
         },
       }),
@@ -69,7 +69,7 @@ describe('UploadImageMediasUseCase Integration Tests', () => {
     );
   });
 
-  it('should throw error when image is invalid', async () => {
+  it('should throw error when video is invalid', async () => {
     expect.assertions(2);
     const category = Category.fake().aCategory().build();
     await categoryRepo.insert(category);
@@ -90,13 +90,13 @@ describe('UploadImageMediasUseCase Integration Tests', () => {
     await videoRepo.insert(video);
 
     try {
-      await uploadImageMediasUseCase.execute({
+      await uploadAudioVideoMediasUseCase.execute({
         video_id: video.video_id.id,
-        field: 'banner',
+        field: 'trailer',
         file: {
-          raw_name: 'banner.jpg',
+          raw_name: 'trailer.mp4',
           data: Buffer.from(''),
-          mime_type: 'image/jpg',
+          mime_type: 'video/mov',
           size: 100,
         },
       });
@@ -104,15 +104,15 @@ describe('UploadImageMediasUseCase Integration Tests', () => {
       expect(error).toBeInstanceOf(EntityValidationError);
       expect(error.errors).toEqual([
         {
-          banner: [
-            'Invalid media file mime type. Expected one of [image/jpeg, image/png, image/gif], received image/jpg',
+          trailer: [
+            'Invalid media file mime type. Expected one of [video/mp4], received video/mov',
           ],
         },
       ]);
     }
   }, 10000);
 
-  it('should upload banner image', async () => {
+  it('should upload trailer video', async () => {
     const storeSpy = jest.spyOn(storageService, 'store');
     const category = Category.fake().aCategory().build();
     await categoryRepo.insert(category);
@@ -132,27 +132,27 @@ describe('UploadImageMediasUseCase Integration Tests', () => {
 
     await videoRepo.insert(video);
 
-    await uploadImageMediasUseCase.execute({
+    await uploadAudioVideoMediasUseCase.execute({
       video_id: video.video_id.id,
-      field: 'banner',
+      field: 'trailer',
       file: {
-        raw_name: 'banner.jpg',
+        raw_name: 'trailer.mp4',
         data: Buffer.from('test data'),
-        mime_type: 'image/jpeg',
+        mime_type: 'video/mp4',
         size: 100,
       },
     });
 
     const videoUpdated = await videoRepo.findById(video.video_id);
-    expect(videoUpdated!.banner).toBeDefined();
-    expect(videoUpdated!.banner!.name.includes('.jpg')).toBeTruthy();
-    expect(videoUpdated!.banner!.location).toBe(
-      `videos/${videoUpdated!.video_id.id}/images`,
+    expect(videoUpdated!.trailer).toBeDefined();
+    expect(videoUpdated!.trailer!.name.includes('.mp4')).toBeTruthy();
+    expect(videoUpdated!.trailer!.raw_location).toBe(
+      `videos/${videoUpdated!.video_id.id}/videos`,
     );
     expect(storeSpy).toHaveBeenCalledWith({
       data: Buffer.from('test data'),
-      id: videoUpdated!.banner!.url,
-      mime_type: 'image/jpeg',
+      id: videoUpdated!.trailer!.raw_url,
+      mime_type: 'video/mp4',
     });
   }, 10000);
 });
