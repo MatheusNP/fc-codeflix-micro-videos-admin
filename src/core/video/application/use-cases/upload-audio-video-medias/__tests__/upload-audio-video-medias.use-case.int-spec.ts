@@ -10,8 +10,10 @@ import { Genre } from '@core/genre/domain/genre.aggregate';
 import { IGenreRepository } from '@core/genre/domain/genre.repository';
 import { GenreModel } from '@core/genre/infra/db/sequelize/genre-model';
 import { GenreSequelizeRepository } from '@core/genre/infra/db/sequelize/genre-sequelize.repository';
+import { ApplicationService } from '@core/shared/application/application.service';
 import { IStorage } from '@core/shared/application/storage.interface';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
+import { DomainEventMediator } from '@core/shared/domain/events/domain-event-mediator';
 import { EntityValidationError } from '@core/shared/domain/validators/validation.error';
 import { Config } from '@core/shared/infra/config';
 import { UnitOfWorkSequelize } from '@core/shared/infra/db/sequelize/unit-of-work-sequelize';
@@ -22,6 +24,7 @@ import { setupSequelizeForVideo } from '@core/video/infra/db/sequelize/testing/h
 import { VideoSequelizeRepository } from '@core/video/infra/db/sequelize/video-sequelize.repository';
 import { VideoModel } from '@core/video/infra/db/sequelize/video.model';
 import { Storage as GoogleCloudStorageSdk } from '@google-cloud/storage';
+import EventEmitter2 from 'eventemitter2';
 import { UploadAudioVideoMediasUseCase } from '../upload-audio-video-medias.use-case';
 
 describe('UploadAudioVideoMediasUseCase Integration Tests', () => {
@@ -31,6 +34,8 @@ describe('UploadAudioVideoMediasUseCase Integration Tests', () => {
   let genreRepo: IGenreRepository;
   let castMemberRepo: ICastMemberRepository;
   let uow: UnitOfWorkSequelize;
+  let domainMediator: DomainEventMediator;
+  let appService: ApplicationService;
   let storageService: IStorage;
   const sequelizeHelper = setupSequelizeForVideo();
   const storageSdk = new GoogleCloudStorageSdk({
@@ -39,6 +44,8 @@ describe('UploadAudioVideoMediasUseCase Integration Tests', () => {
 
   beforeEach(() => {
     uow = new UnitOfWorkSequelize(sequelizeHelper.sequelize);
+    domainMediator = new DomainEventMediator(new EventEmitter2());
+    appService = new ApplicationService(uow, domainMediator);
     categoryRepo = new CategorySequelizeRepository(CategoryModel);
     genreRepo = new GenreSequelizeRepository(GenreModel, uow);
     castMemberRepo = new CastMemberSequelizeRepository(CastMemberModel);
@@ -46,7 +53,7 @@ describe('UploadAudioVideoMediasUseCase Integration Tests', () => {
     storageService = new GoogleCloudStorage(storageSdk, Config.bucketName());
 
     uploadAudioVideoMediasUseCase = new UploadAudioVideoMediasUseCase(
-      uow,
+      appService,
       videoRepo,
       storageService,
     );
