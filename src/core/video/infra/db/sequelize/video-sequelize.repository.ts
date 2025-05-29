@@ -195,10 +195,9 @@ export class VideoSequelizeRepository implements IVideoRepository {
     this.uow.addAggregateRoot(entity);
   }
 
-  //TODO - implementar mudança de VideoID para o agregado video
+  //TODO: implementar mudança de VideoID para o agregado video
   //async delete(video: Video)
   async delete(id: VideoId): Promise<void> {
-    //consultar o agregado
     const videoCategoryRelation =
       this.videoModel.associations.categories_id.target;
     const videoGenreRelation = this.videoModel.associations.genres_id.target;
