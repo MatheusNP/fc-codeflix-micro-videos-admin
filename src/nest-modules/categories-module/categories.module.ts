@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { CategoriesController } from './categories.controller';
-import { SequelizeModule } from '@nestjs/sequelize';
 import { CategoryModel } from '@core/category/infra/db/sequelize/category.model';
+import { Module } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { CategoriesController } from './categories.controller';
 import { CATEGORY_PROVIDERS } from './categories.providers';
 
 @Module({
@@ -14,7 +14,7 @@ import { CATEGORY_PROVIDERS } from './categories.providers';
   ],
   exports: [
     CATEGORY_PROVIDERS.REPOSITORIES.CATEGORY_REPOSITORY.provide,
-    CATEGORY_PROVIDERS.VALIDATIONS.CATEGORIES_ID_EXISTS_IN_STORAGE_VALIDATOR
+    CATEGORY_PROVIDERS.VALIDATIONS.CATEGORIES_ID_EXISTS_IN_DATABASE_VALIDATOR
       .provide,
   ],
 })

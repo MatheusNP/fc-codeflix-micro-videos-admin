@@ -1,24 +1,24 @@
+import { CastMemberOutputMapper } from '@core/cast-member/application/use-cases/common/cast-member-output';
+import {
+  CastMember,
+  CastMemberId,
+} from '@core/cast-member/domain/cast-member.aggregate';
 import { ICastMemberRepository } from '@core/cast-member/domain/cast-member.repository';
-import { CastMembersController } from '../cast-members.controller';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from 'src/nest-modules/config-module/config.module';
 import { DatabaseModule } from 'src/nest-modules/database-module/database.module';
+import { CastMembersController } from '../cast-members.controller';
 import { CastMembersModule } from '../cast-members.module';
+import {
+  CastMemberCollectionPresenter,
+  CastMemberPresenter,
+} from '../cast-members.presenter';
 import { CAST_MEMBERS_PROVIDERS } from '../cast-members.providers';
 import {
   CreateCastMemberFixture,
   ListCastMembersFixture,
   UpdateCastMemberFixture,
 } from '../testing/cast-member-fixture';
-import { CastMemberOutputMapper } from '@core/cast-member/application/use-cases/common/cast-member-output';
-import {
-  CastMemberCollectionPresenter,
-  CastMemberPresenter,
-} from '../cast-members.presenter';
-import {
-  CastMember,
-  CastMemberId,
-} from '@core/cast-member/domain/cast-member.aggregate';
 
 describe('CastMembersController Integration Tests', () => {
   let controller: CastMembersController;
@@ -31,7 +31,7 @@ describe('CastMembersController Integration Tests', () => {
 
     controller = module.get<CastMembersController>(CastMembersController);
     repository = module.get<ICastMemberRepository>(
-      CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBERS_REPOSITORY.provide,
+      CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
     );
   });
 

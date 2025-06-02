@@ -61,7 +61,7 @@ export const USE_CASES = {
 };
 
 export const VALIDATIONS = {
-  CATEGORIES_ID_EXISTS_IN_STORAGE_VALIDATOR: {
+  CATEGORIES_ID_EXISTS_IN_DATABASE_VALIDATOR: {
     provide: CategoriesIdExistsInDatabaseValidator,
     useFactory: (categoryRepo: ICategoryRepository) =>
       new CategoriesIdExistsInDatabaseValidator(categoryRepo),

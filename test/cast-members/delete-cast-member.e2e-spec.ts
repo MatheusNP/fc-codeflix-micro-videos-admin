@@ -39,7 +39,7 @@ describe('CastMembersController (e2e)', () => {
   describe('/cast-members/:id (DELETE)', () => {
     it('should delete a cast member', async () => {
       const castMemberRepo = appHelper.app.get<ICastMemberRepository>(
-        CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBERS_REPOSITORY.provide,
+        CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
       );
 
       const castMember = CastMember.fake().anActor().build();

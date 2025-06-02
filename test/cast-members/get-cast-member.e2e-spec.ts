@@ -43,7 +43,7 @@ describe('CastMembersController (e2e)', () => {
 
     it('should get a cast member', async () => {
       const castMemberRepo = appHelper.app.get<ICastMemberRepository>(
-        CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBERS_REPOSITORY.provide,
+        CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
       );
 
       const castMember = CastMember.fake().anActor().build();

@@ -5,6 +5,7 @@ import { DeleteGenreUseCase } from '@core/genre/application/use-cases/delete-gen
 import { GetGenreUseCase } from '@core/genre/application/use-cases/get-genre/get-genre.use-case';
 import { ListGenresUseCase } from '@core/genre/application/use-cases/list-genres/list-genres.use-case';
 import { UpdateGenreUseCase } from '@core/genre/application/use-cases/update-genre/update-genre.use-case';
+import { GenresIdExistsInDatabaseValidator } from '@core/genre/application/validations/genres-ids-exists-in-database.validator';
 import { IGenreRepository } from '@core/genre/domain/genre.repository';
 import { GenreInMemoryRepository } from '@core/genre/infra/db/in-memory/genre-in-memory.repository';
 import { GenreModel } from '@core/genre/infra/db/sequelize/genre-model';
@@ -50,7 +51,7 @@ export const USE_CASES = {
       'UnitOfWork',
       REPOSITORIES.GENRE_REPOSITORY.provide,
       CATEGORY_PROVIDERS.REPOSITORIES.CATEGORY_REPOSITORY.provide,
-      CATEGORY_PROVIDERS.VALIDATIONS.CATEGORIES_ID_EXISTS_IN_STORAGE_VALIDATOR
+      CATEGORY_PROVIDERS.VALIDATIONS.CATEGORIES_ID_EXISTS_IN_DATABASE_VALIDATOR
         .provide,
     ],
   },
@@ -72,7 +73,7 @@ export const USE_CASES = {
       'UnitOfWork',
       REPOSITORIES.GENRE_REPOSITORY.provide,
       CATEGORY_PROVIDERS.REPOSITORIES.CATEGORY_REPOSITORY.provide,
-      CATEGORY_PROVIDERS.VALIDATIONS.CATEGORIES_ID_EXISTS_IN_STORAGE_VALIDATOR
+      CATEGORY_PROVIDERS.VALIDATIONS.CATEGORIES_ID_EXISTS_IN_DATABASE_VALIDATOR
         .provide,
     ],
   },
@@ -106,7 +107,17 @@ export const USE_CASES = {
   },
 };
 
+export const VALIDATIONS = {
+  GENRES_IDS_EXISTS_IN_DATABASE_VALIDATOR: {
+    provide: GenresIdExistsInDatabaseValidator,
+    useFactory: (genreRepo: IGenreRepository) =>
+      new GenresIdExistsInDatabaseValidator(genreRepo),
+    inject: [REPOSITORIES.GENRE_REPOSITORY.provide],
+  },
+};
+
 export const GENRES_PROVIDERS = {
   REPOSITORIES,
   USE_CASES,
+  VALIDATIONS,
 };
