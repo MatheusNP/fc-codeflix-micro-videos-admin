@@ -121,9 +121,7 @@ export class VideosController {
       });
 
       await this.uploadAudioVideoMedia.execute(input);
-      console.log('aqui');
     } else {
-      console.log('ali');
       //use case upload image media
     }
 
