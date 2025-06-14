@@ -1,3 +1,4 @@
+import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { Module } from '@nestjs/common';
 import { CastMembersModule } from './nest-modules/cast-members-module/cast-members.module';
 import { CategoriesModule } from './nest-modules/categories-module/categories.module';
@@ -20,6 +21,9 @@ import { VideosModule } from './nest-modules/videos-module/videos.module';
     CastMembersModule,
     GenresModule,
     VideosModule,
+    RabbitMQModule.forRoot({
+      uri: 'amqp://admin:admin@rabbitmq:5672',
+    }),
   ],
 })
 export class AppModule {}
