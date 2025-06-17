@@ -5,6 +5,7 @@ import { ICategoryRepository } from '@core/category/domain/category.repository';
 import { GenresIdExistsInDatabaseValidator } from '@core/genre/application/validations/genres-ids-exists-in-database.validator';
 import { IGenreRepository } from '@core/genre/domain/genre.repository';
 import { ApplicationService } from '@core/shared/application/application.service';
+import { IMessageBroker } from '@core/shared/application/message-broker.interface';
 import { IStorage } from '@core/shared/application/storage.interface';
 import { IUnitOfWork } from '@core/shared/domain/repository/unit-of-work.interface';
 import { UnitOfWorkSequelize } from '@core/shared/infra/db/sequelize/unit-of-work-sequelize';
@@ -147,7 +148,9 @@ export const USE_CASES = {
 export const HANDLERS = {
   PUBLISH_VIDEO_MEDIA_REPLACED_IN_QUEUE_HANDLER: {
     provide: PublishVideoMediaReplacedInQueueHandler,
-    useClass: PublishVideoMediaReplacedInQueueHandler,
+    useFactory: (messageBroker: IMessageBroker) =>
+      new PublishVideoMediaReplacedInQueueHandler(messageBroker),
+    inject: ['IMessageBroker'],
   },
 };
 
